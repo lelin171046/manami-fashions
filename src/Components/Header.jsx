@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const Header = () => {
     return (
-   <header className="p-4 dark:bg-gray-100 dark:text-gray-800">
+   <header className="p-4 fixed top-0 left-0 w-full bg-white shadow-md z-50 dark:bg-gray-100 dark:text-gray-800">
 	<div className="container flex justify-between h-16 mx-auto md:justify-center md:space-x-8">
 		<ul className="items-stretch  hidden space-x-3 md:flex">
 			<li className="flex">

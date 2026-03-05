@@ -1,52 +1,241 @@
-import React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  ArrowLeft, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Send,
+  CheckCircle
+} from 'lucide-react';
 
 const Contact = () => {
-    return (
-        <section className="py-6 dark:bg-gray-100 dark:text-gray-900">
-	<div className="grid max-w-6xl grid-cols-1 px-6 mx-auto lg:px-8 md:grid-cols-2 md:divide-x">
-		<div className="py-6 md:py-0 md:px-6">
-			<h1 className="text-4xl font-bold">Get in touch</h1>
-			<p className="pt-2 pb-4">Fill in the form to start a conversation</p>
-			<div className="space-y-4">
-				<p className="flex items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 mr-2 sm:mr-6">
-						<path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path>
-					</svg>
-					<span>Fake address, 9999 City</span>
-				</p>
-				<p className="flex items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 mr-2 sm:mr-6">
-						<path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
-					</svg>
-					<span>123456789</span>
-				</p>
-				<p className="flex items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 mr-2 sm:mr-6">
-						<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-						<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-					</svg>
-					<span>contact@business.com</span>
-				</p>
-			</div>
-		</div>
-		<form noValidate="" className="flex flex-col py-6 space-y-6 md:py-0 md:px-6">
-			<label className="block">
-				<span className="mb-1">Full name</span>
-				<input type="text" placeholder="Leroy Jenkins" className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:dark:ring-violet-600 dark:bg-gray-100" />
-			</label>
-			<label className="block">
-				<span className="mb-1">Email address</span>
-				<input type="email" placeholder="leroy@jenkins.com" className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:dark:ring-violet-600 dark:bg-gray-100" />
-			</label>
-			<label className="block">
-				<span className="mb-1">Message</span>
-				<textarea rows="3" className="block w-full rounded-md focus:ring focus:ring-opacity-75 focus:dark:ring-violet-600 dark:bg-gray-100"></textarea>
-			</label>
-			<button type="button" className="self-center px-8 py-3 text-lg rounded focus:ring hover:ring focus:ring-opacity-75 dark:bg-violet-600 dark:text-gray-50 focus:dark:ring-violet-600 hover:dark:ring-violet-600">Submit</button>
-		</form>
-	</div>
-</section>
-    );
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  // EmailJS sendEmail function (same as before)
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrors({});
+
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsLoading(false);
+      return;
+    }
+
+    // SIMULATED SUCCESS (replace with EmailJS)
+    setTimeout(() => {
+      setIsSuccess(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-32 pb-20">
+      {/* Breadcrumb */}
+      <div className="px-4 mb-12">
+        <Link 
+          to="/" 
+          className="inline-flex items-center space-x-2 text-white/60 hover:text-white transition-all duration-300 group"
+        >
+          <ArrowLeft size={20} className="group-hover:-translate-x-1" />
+          <span className="text-sm font-medium uppercase tracking-wider">Home</span>
+        </Link>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-20">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent mb-6">
+            Get In Touch
+          </h1>
+          <p className="text-xl md:text-2xl text-white/60 font-light max-w-2xl mx-auto leading-relaxed">
+            Ready to start your next project? Send us a message and we'll respond within 24 hours.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          
+          {/* Contact Info + Map */}
+          <div className="lg:row-span-2 space-y-8">
+            <div className="space-y-6">
+              <h2 className="text-4xl font-black bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent mb-2">
+                Contact Info
+              </h2>
+              <p className="text-white/60 leading-relaxed">Have questions? We're here to help.</p>
+            </div>
+
+            {/* Contact Cards */}
+            <div className="space-y-6 mb-8">
+              <a href="mailto:info@manami.com" className="group flex items-start space-x-4 p-6 backdrop-blur-sm bg-white/10 hover:bg-white/20 border border-white/20 rounded-3xl transition-all duration-400 hover:shadow-2xl hover:shadow-white/20 hover:-translate-y-2 shadow-xl">
+                <div className="w-14 h-14 backdrop-blur-sm bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 mt-1 shadow-lg group-hover:bg-white/30 transition-all">
+                  <Mail size={24} className="text-white" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xl mb-1">Email Us</h4>
+                  <p className="text-white/70 group-hover:text-white transition-colors">info@manami.com</p>
+                </div>
+              </a>
+
+              <a href="tel:+880123456789" className="group flex items-start space-x-4 p-6 backdrop-blur-sm bg-white/10 hover:bg-white/20 border border-white/20 rounded-3xl transition-all duration-400 hover:shadow-2xl hover:shadow-white/20 hover:-translate-y-2 shadow-xl">
+                <div className="w-14 h-14 backdrop-blur-sm bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 mt-1 shadow-lg group-hover:bg-white/30 transition-all">
+                  <Phone size={24} className="text-white" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xl mb-1">Call Us</h4>
+                  <p className="text-white/70 group-hover:text-white transition-colors">+880 1234 56789</p>
+                </div>
+              </a>
+            </div>
+
+            {/* Google Maps Embed */}
+            <div className="relative">
+              <div className="backdrop-blur-sm bg-white/5 border border-white/20 rounded-3xl p-2 shadow-2xl mb-6">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.801248997614!2d90.39409961495938!3d23.74504948454962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDQ0JzQyLjQiTiA5MMKwMjMnMzguNSJF!5e0!3m2!1sen!2sbd!4v1730789012345!5m2!1sen!2sbd"
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Manami Garments Location"
+                  className="w-full h-[400px] md:h-[500px] rounded-2xl shadow-2xl"
+                />
+              </div>
+              <div className="text-center pt-4">
+                <MapPin size={24} className="mx-auto mb-3 text-emerald-400" />
+                <p className="text-lg font-bold text-white">House #12, Road #5</p>
+                <p className="text-white/70">Dhanmondi, Dhaka-1205</p>
+              </div>
+            </div>
+
+            {/* Working Hours */}
+            <div className="p-8 backdrop-blur-sm bg-white/5 border border-white/20 rounded-3xl shadow-xl">
+              <h4 className="font-bold text-xl mb-4 flex items-center space-x-3">
+                <span>🕒</span>
+                <span>Working Hours</span>
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between"><span>Sunday-Thursday</span><span>9AM - 7PM</span></div>
+                <div className="flex justify-between"><span>Friday</span><span>Closed</span></div>
+                <div className="flex justify-between font-bold text-emerald-400"><span>Saturday</span><span>10AM - 5PM</span></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-4xl font-black bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent mb-2">
+                Send Message
+              </h2>
+              <p className="text-white/60">Fill out the form and our team will get back to you within 24 hours.</p>
+            </div>
+
+            {isSuccess ? (
+              <div className="p-12 backdrop-blur-xl bg-emerald-500/20 border-2 border-emerald-400/50 rounded-4xl text-center shadow-2xl shadow-emerald-500/25">
+                <CheckCircle size={64} className="mx-auto mb-6 text-emerald-400 shadow-lg" />
+                <h3 className="text-3xl font-black mb-4 text-white">Message Sent!</h3>
+                <p className="text-xl text-white/90 mb-8">Thank you for contacting us. We'll respond within 24 hours.</p>
+                <button
+                  onClick={() => setIsSuccess(false)}
+                  className="px-10 py-4 backdrop-blur-sm bg-white/20 hover:bg-white/30 border border-white/30 rounded-3xl font-bold uppercase tracking-wider text-lg transition-all duration-400 hover:shadow-xl hover:shadow-white/20 hover:scale-105"
+                >
+                  Send Another
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={sendEmail} className="space-y-6">
+                <div>
+                  <label className="block text-lg font-bold text-white/80 mb-3 uppercase tracking-wider">Full Name</label>
+                  <input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`w-full px-6 py-5 backdrop-blur-sm bg-white/5 hover:bg-white/10 border rounded-3xl text-white placeholder-white/50 font-medium text-lg transition-all duration-400 shadow-xl focus:outline-none focus:shadow-white/20 focus:border-white/40 ${errors.name ? 'border-rose-500/50 shadow-rose-500/20' : 'border-white/20'}`}
+                    placeholder="Enter your full name"
+                  />
+                  {errors.name && <p className="text-rose-400 text-sm mt-2 ml-1">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-lg font-bold text-white/80 mb-3 uppercase tracking-wider">Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full px-6 py-5 backdrop-blur-sm bg-white/5 hover:bg-white/10 border rounded-3xl text-white placeholder-white/50 font-medium text-lg transition-all duration-400 shadow-xl focus:outline-none focus:shadow-white/20 focus:border-white/40 ${errors.email ? 'border-rose-500/50 shadow-rose-500/20' : 'border-white/20'}`}
+                    placeholder="your@email.com"
+                  />
+                  {errors.email && <p className="text-rose-400 text-sm mt-2 ml-1">{errors.email}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-lg font-bold text-white/80 mb-3 uppercase tracking-wider">Subject</label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className={`w-full px-6 py-5 backdrop-blur-sm bg-white/5 hover:bg-white/10 border rounded-3xl text-white placeholder-white/50 font-medium text-lg transition-all duration-400 shadow-xl focus:outline-none focus:shadow-white/20 focus:border-white/40 ${errors.subject ? 'border-rose-500/50 shadow-rose-500/20' : 'border-white/20'}`}
+                    placeholder="Order inquiry, bulk order, etc."
+                  />
+                  {errors.subject && <p className="text-rose-400 text-sm mt-2 ml-1">{errors.subject}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-lg font-bold text-white/80 mb-3 uppercase tracking-wider">Message</label>
+                  <textarea
+                    name="message"
+                    rows="6"
+                    value={formData.message}
+                    onChange={handleChange}
+                    className={`w-full px-6 py-5 backdrop-blur-sm bg-white/5 hover:bg-white/10 border rounded-3xl text-white placeholder-white/50 font-medium text-lg resize-vertical transition-all duration-400 shadow-xl focus:outline-none focus:shadow-white/20 focus:border-white/40 ${errors.message ? 'border-rose-500/50 shadow-rose-500/20' : 'border-white/20'}`}
+                    placeholder="Tell us about your project requirements..."
+                  />
+                  {errors.message && <p className="text-rose-400 text-sm mt-2 ml-1">{errors.message}</p>}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-8 backdrop-blur-2xl bg-gradient-to-r from-white/20 via-white/10 to-transparent border-2 border-white/30 rounded-4xl font-black text-2xl uppercase tracking-widest flex items-center justify-center space-x-4 transition-all duration-500 hover:shadow-2xl hover:shadow-white/40 hover:scale-[1.02] hover:-translate-y-2 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed group"
+                >
+                  <Send size={28} className={`transition-transform group-hover:scale-110 ${isLoading ? 'animate-spin' : ''}`} />
+                  <span>{isLoading ? 'Sending...' : 'Send Message'}</span>
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Contact;

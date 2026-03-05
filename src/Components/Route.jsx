@@ -4,9 +4,10 @@ import Home from "../Pages/Home";
 import Products from "../Pages/Products";
 import Error from "./Error";
 import Operations from "../Pages/Operations";
-import Gallery from "./Gallary";
+import Gallery from "./Gallery";
 import Buyers from "../Pages/Buyers";
 import Contact from "../Pages/Contact";
+import Certifications from "../Pages/Certifications";
 
 const router = createBrowserRouter([
     { 
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/certifications",
-                element: <h1 className="text-3xl font-bold text-center my-8">Certifications Page Coming Soon...</h1>
+                element: <Certifications></Certifications>
             },
             {
                 path: "/gallery",

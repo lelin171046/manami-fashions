@@ -6,10 +6,9 @@ import Footer from '../Components/Footer';
 const Layout = () => (
     <div>
         <Header />
-        <div className='min-h-[calc(100vh-306px)]'>
-            <Outlet />
-            
-        </div>
+       <div className='pt-[100px] min-h-[calc(100vh-306px)]'>
+  <Outlet />
+</div>
         <Footer></Footer>
     </div>
 );
