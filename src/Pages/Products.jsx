@@ -116,23 +116,18 @@ const Products = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-32 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-10 pb-20">
       {/* Breadcrumb */}
-      <div className="px-4 mb-12">
-        <Link to="/" className="inline-flex items-center space-x-2 text-white/60 hover:text-white transition-all duration-300 group">
-          <ArrowLeft size={20} className="group-hover:-translate-x-1" />
-          <span className="text-sm font-medium uppercase tracking-wider">Home</span>
-        </Link>
-      </div>
+     
 
       {/* Header */}
       <section className="px-4 mb-20">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent mb-6">
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent mb-6">
             Our Collection
           </h1>
           <p className="text-xl md:text-2xl text-white/60 font-light max-w-2xl mx-auto leading-relaxed">
-            Premium quality garments crafted with love. Starting from ৳1,450 only.
+            Premium quality garments crafted with love. 
           </p>
         </div>
       </section>

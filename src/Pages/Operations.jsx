@@ -116,20 +116,11 @@ const Operations = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/95 to-black text-white pt-32 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/95 to-black text-white pt-2 overflow-hidden">
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid-white/[0.02]" />
       
-      {/* Breadcrumb */}
-      <div className="px-4 mb-12 relative z-10">
-        <Link 
-          to="/" 
-          className="inline-flex items-center space-x-2 text-white/60 hover:text-white transition-all duration-300 group"
-        >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1" />
-          <span className="text-sm font-medium uppercase tracking-wider">Home</span>
-        </Link>
-      </div>
+     
 
       {/* Hero Section */}
       <section className="px-4 mb-24 relative z-10">
