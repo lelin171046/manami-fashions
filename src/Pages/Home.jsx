@@ -1,6 +1,8 @@
 import React from 'react';
 import Hero from '../Components/Hero';
 import Hero2 from '../Components/Hero2';
+import BrandSlider from '../Components/BrandSlider';
+import WorkWithUs from './WorkWithUs';
 
 const Home = () => {
     return (
@@ -8,7 +10,9 @@ const Home = () => {
 
             <Hero></Hero>
             <Hero2></Hero2>
-            <h1 className="text-3xl font-bold text-center my-8">Welcome to Manami Fashions Ltd.</h1>
+            <BrandSlider></BrandSlider>
+            <WorkWithUs></WorkWithUs>
+           
         </div>
     );
 };

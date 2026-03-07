@@ -19,7 +19,7 @@ const Header = () => {
 		</ul>
 		<div className="flex items-center md:space-x-4">
 			
-			<button type="button" className="hidden px-6 py-2 font-semibold rounded lg:block dark:bg-violet-600 dark:text-gray-50">Contact</button>
+			<button type="button" className="hidden px-6 py-2 font-semibold rounded lg:block dark:bg-black dark:text-gray-50">Contact</button>
 		</div>
 		<button title="Open menu" type="button" className="p-4 lg:hidden">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 dark:text-gray-800">

@@ -3,19 +3,20 @@ import Hero from "./Hero";
 
 const Hero2 = () => {
   const images = [
-    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
+    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1768888322/cld-sample-3.jpg",
     "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c",
     "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
-    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d",
-    "https://images.unsplash.com/photo-1483985988355-763728e1935b"
+    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1768888323/main-sample.png",
+    "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+   
   ];
 
   return (
     <section className="w-full bg-gray-100 py-10">
       
       {/* Heading */}
-      <div className="text-center mb-18">
-        <h2 className="text-sm tracking-[4px] text-gray-700">
+      <div className="text-center mb-18 mt-10">
+        <h2 className="text-xl tracking-[4px] text-gray-700">
           CELEBRATING DESIGN | DELIVERING EXCELLENCE
         </h2>
       </div>
