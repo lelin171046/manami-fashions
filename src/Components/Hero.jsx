@@ -10,9 +10,24 @@ const Hero = () => {
 		</div>
 		<div className="flex flex-col justify-center p-6 text-center rounded-sm lg:max-w-md xl:max-w-lg lg:text-left">
 			
-			<p className="mt-2 mb-4 text-lg sm:mb-10">MANAMI is known as an entity whose main driven force is its human resources. We utilize the strength of the young workforce available in Bangladesh. MANAMI is committed to achieve best customer satisfaction with best quality readymade garments through effective quality management system and continuous improvement.
-				<br  className="hidden md:inline lg:hidden" />turpis pulvinar, est scelerisque ligula sem
-			</p>
+			<section className="bg-black text-white min-h-[80vh] flex flex-col justify-center px-8 md:px-20">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <h1 className="text-6xl md:text-8xl font-light tracking-tighter mb-6">
+        LEADERSHIP <br /> THROUGH EXCELLENCE.
+      </h1>
+      <p className="max-w-xl text-gray-400 text-lg font-light leading-relaxed mb-8">
+        Established in 2010. A 100% export-oriented garment manufacturer 
+        committed to innovation and ethical production in Bangladesh.
+      </p>
+      <button className="border border-white px-8 py-3 uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+        Explore Capabilities
+      </button>
+    </motion.div>
+  </section>
 			<div className="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
 				<button rel="noopener noreferrer" to={'/contact'} className="px-8 py-3 text-lg font-semibold rounded dark:bg-black dark:text-gray-50">About us</button>
 			</div>
