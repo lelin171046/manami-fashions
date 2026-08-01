@@ -1,232 +1,188 @@
-import { useState } from "react";
-import { Search, Grid, List, Heart } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import api from "../api/axios.js";
+import ProductFilterBar from "./products/ProductFilterBar.jsx";
+import ProductCard from "./products/ProductCard.jsx";
+import ProductListItem from "./products/ProductListItem.jsx";
+import ProductModal from "./products/ProductModal.jsx";
 
 const Products = () => {
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [sort, setSort] = useState("");
   const [viewMode, setViewMode] = useState("grid");
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const categories = [
-    { id: "all", name: "All Products" },
-    { id: "women", name: "Women Wear" },
-    { id: "men", name: "Men Wear" },
-    { id: "kids", name: "Kids Wear" },
-    { id: "saree", name: "Sarees" },
-    { id: "kurti", name: "Kurtis" },
-  ];
+  const { data: categoriesData } = useQuery({
+    queryKey: ["public-categories"],
+    queryFn: async () => {
+      const { data } = await api.get("/categories/public");
+      return data.data;
+    },
+  });
 
-  const products = [
-    {
-      id: 1,
-      name: "Summer Floral Kurti",
-      category: "kurti",
-      image:
-        "https://res.cloudinary.com/dcdmktxtz/image/upload/v1768888316/samples/look-up.jpg",
-    },
-    {
-      id: 2,
-      name: "Men Linen Shirt",
-      category: "men",
-      image:
-        "https://res.cloudinary.com/dcdmktxtz/image/upload/v1768888319/samples/woman-on-a-football-field.jpg",
-    },
-    {
-      id: 3,
-      name: "Silk Saree",
-      category: "saree",
-      image:
-        "https://images.unsplash.com/photo-1608254977395-d3f7279efa6f?w=500",
-    },
-    {
-      id: 4,
-      name: "Girls Ethnic Dress",
-      category: "kids",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500",
-    },
-    {
-      id: 5,
-      name: "Anarkali Suit",
-      category: "women",
-      image:
-        "https://images.unsplash.com/photo-1595777457473-7e8123586e10?w=500",
-    },
-    {
-      id: 6,
-      name: "Cotton Printed Saree",
-      category: "saree",
-      image:
-        "https://images.unsplash.com/photo-1602293589931-0c66e5c443eb?w=500",
-    },
-  ];
+  const queryParams = useMemo(() => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (category) params.append("category", category);
+    if (fabric) params.append("fabric", fabric);
+    if (sort) params.append("sort", sort);
+    return params.toString();
+  }, [search, category, fabric, sort]);
 
-  const filteredProducts = products.filter(
-    (product) =>
-      (activeCategory === "all" || product.category === activeCategory) &&
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { data: productsRes, isLoading } = useQuery({
+    queryKey: ["public-products", queryParams],
+    queryFn: async () => {
+      const { data } = await api.get(`/products/public?${queryParams}`);
+      return data;
+    },
+  });
+
+  const products = useMemo(() => {
+    if (!productsRes?.data) return [];
+    return productsRes.data.map((p) => ({
+      ...p,
+      name: p.title,
+      id: p._id,
+      category: p.category?.name || p.category,
+    }));
+  }, [productsRes]);
+
+  const allFabrics = useMemo(() => {
+    if (!productsRes?.data) return [];
+    return [...new Set(productsRes.data.map((p) => p.fabric).filter(Boolean))].sort();
+  }, [productsRes]);
+
+  const categories = useMemo(() => {
+    if (!categoriesData) return [];
+    return categoriesData.map((c) => c.name).sort();
+  }, [categoriesData]);
+
+  const categoryIdMap = useMemo(() => {
+    if (!categoriesData) return {};
+    const map = {};
+    categoriesData.forEach((c) => { map[c.name] = c._id; });
+    return map;
+  }, [categoriesData]);
+
+  const totalResults = productsRes?.meta?.total ?? products.length;
+
+  const hasActiveFilters = !!(search || category || fabric || sort);
+
+  const handleReset = () => {
+    setSearch("");
+    setCategory("");
+    setFabric("");
+    setSort("");
+  };
+
+  const handleCategoryChange = (catName) => {
+    setCategory(catName ? categoryIdMap[catName] || catName : "");
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-800 py-16">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto text-center mb-12 px-4">
-        <h1 className="text-4xl font-bold mb-4">Our Collection</h1>
-        <p className="text-gray-600">
-          Premium quality garments crafted with modern fashion trends.
-        </p>
-      </div>
-
-      {/* Filters */}
-      <div className="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row justify-between items-center gap-6 mb-10">
-        {/* Search */}
-        <div className="relative w-full lg:w-72">
-          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        {/* Category */}
-        <div className="flex flex-wrap gap-3">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-5 py-2 rounded-lg text-sm transition ${
-                activeCategory === cat.id
-                  ? "bg-black text-white"
-                  : "bg-white border border-gray-300 hover:bg-gray-200"
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-
-        {/* View Toggle */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => setViewMode("grid")}
-            className={`p-3 rounded ${
-              viewMode === "grid"
-                ? "bg-black text-white"
-                : "bg-white border border-gray-300"
-            }`}
+    <div className="min-h-screen bg-white py-24 px-6 md:px-20 font-sans text-black">
+      <div className="max-w-screen-xl mx-auto">
+        {/* Header */}
+        <div className="mb-20">
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-[10px] tracking-[0.5em] uppercase text-gray-400 font-bold block mb-4"
           >
-            <Grid size={18} />
-          </button>
-
-          <button
-            onClick={() => setViewMode("list")}
-            className={`p-3 rounded ${
-              viewMode === "list"
-                ? "bg-black text-white"
-                : "bg-white border border-gray-300"
-            }`}
-          >
-            <List size={18} />
-          </button>
+            Product Portfolio
+          </motion.span>
+          <h1 className="text-5xl md:text-7xl font-light tracking-tighter uppercase mb-6">
+            Our <span className="font-bold">Collection.</span>
+          </h1>
+          <p className="text-gray-400 max-w-xl text-sm leading-relaxed">
+            Premium quality garments crafted with precision manufacturing. Browse our full range or filter by category and fabric type.
+          </p>
         </div>
-      </div>
 
-      {/* Products */}
-      <div className="max-w-7xl mx-auto px-4">
-        {viewMode === "grid" ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => setSelectedProduct(product)}
-              />
-            ))}
+        {/* Filters */}
+        <ProductFilterBar
+          categories={categories}
+          fabrics={allFabrics}
+          search={search}
+          onSearchChange={setSearch}
+          category={category ? (categoryIdMap[category] ? category : "") : ""}
+          onCategoryChange={handleCategoryChange}
+          fabric={fabric}
+          onFabricChange={setFabric}
+          sort={sort}
+          onSortChange={setSort}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onReset={handleReset}
+          totalResults={totalResults}
+          hasActiveFilters={hasActiveFilters}
+        />
+
+        {/* Products */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-32">
+            <Loader2 size={24} className="text-gray-300 animate-spin" />
           </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-32">
+            <p className="text-gray-300 text-lg uppercase tracking-widest">No products found</p>
+            {hasActiveFilters && (
+              <button onClick={handleReset} className="mt-4 text-xs uppercase tracking-widest text-gray-400 hover:text-black transition-colors border-b border-gray-300 hover:border-black pb-0.5">
+                Clear all filters
+              </button>
+            )}
+          </div>
+        ) : viewMode === "grid" ? (
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+            <AnimatePresence mode="popLayout">
+              {products.map((product, i) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onQuickView={setSelectedProduct}
+                  index={i}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         ) : (
-          <div className="space-y-6">
-            {filteredProducts.map((product) => (
-              <ProductList
-                key={product.id}
-                product={product}
-                onClick={() => setSelectedProduct(product)}
-              />
-            ))}
+          <div>
+            <AnimatePresence mode="popLayout">
+              {products.map((product, i) => (
+                <ProductListItem
+                  key={product._id}
+                  product={product}
+                  onQuickView={setSelectedProduct}
+                  index={i}
+                />
+              ))}
+            </AnimatePresence>
           </div>
         )}
+
+        {/* Bottom decoration — matches Hero.jsx */}
+        <div className="mt-24 flex flex-wrap gap-x-12 gap-y-4 opacity-40 grayscale">
+          {["100% Export Oriented", "BSCI Grade A", "ISO Certified", "BGMEA Registered"].map((tag) => (
+            <div key={tag} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-black rounded-full" />
+              <span className="text-[10px] uppercase tracking-widest font-bold">{tag}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Modal */}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          close={() => setSelectedProduct(null)}
-        />
-      )}
+      {/* Quick View Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
-
-const ProductCard = ({ product, onClick }) => (
-  <div
-    onClick={onClick}
-    className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer group"
-  >
-    <div className="h-72 overflow-hidden">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-full object-cover group-hover:scale-105 transition"
-      />
-    </div>
-
-    <div className="p-4 flex justify-between items-center">
-      <h3 className="font-semibold">{product.name}</h3>
-      <Heart size={18} className="text-gray-500" />
-    </div>
-  </div>
-);
-
-const ProductList = ({ product, onClick }) => (
-  <div
-    onClick={onClick}
-    className="flex items-center gap-6 bg-white p-4 rounded-xl shadow hover:shadow-lg cursor-pointer"
-  >
-    <img
-      src={product.image}
-      alt={product.name}
-      className="w-28 h-28 object-cover rounded-lg"
-    />
-
-    <h3 className="text-lg font-semibold">{product.name}</h3>
-  </div>
-);
-
-const ProductModal = ({ product, close }) => (
-  <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-    <div className="bg-white rounded-xl max-w-xl w-full p-6 relative">
-      <button
-        onClick={close}
-        className="absolute top-4 right-4 text-gray-500"
-      >
-        ✕
-      </button>
-
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-80 object-cover rounded-lg mb-6"
-      />
-
-      <h2 className="text-2xl font-bold">{product.name}</h2>
-      <p className="text-gray-600 mt-3">
-        Premium quality garment crafted with modern fashion design and comfort.
-      </p>
-    </div>
-  </div>
-);
 
 export default Products;

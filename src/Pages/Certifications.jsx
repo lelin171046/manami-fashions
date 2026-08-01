@@ -1,185 +1,186 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Award, Calendar, ExternalLink } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Award, Calendar, ExternalLink, Loader2, X } from "lucide-react";
+import api from "../api/axios.js";
+
+const TABS = [
+  { id: "all", label: "All Certifications" },
+  { id: "compliance", label: "Compliance" },
+  { id: "quality", label: "Quality" },
+  { id: "sustainability", label: "Sustainability" },
+];
+
+const formatDateRange = (issueDate, expiryDate) => {
+  const issue = issueDate ? new Date(issueDate).getFullYear() : null;
+  const expiry = expiryDate ? new Date(expiryDate).getFullYear() : null;
+  if (issue && expiry) return `Valid: ${issue} \u2013 ${expiry}`;
+  if (issue) return `Certified: ${issue}`;
+  if (expiry) return `Expires: ${expiry}`;
+  return null;
+};
 
 const Certifications = () => {
   const [activeTab, setActiveTab] = useState("all");
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [previewCert, setPreviewCert] = useState(null);
 
-  const certifications = [
-    {
-      id: 1,
-      title: "BSCI Compliance Certification",
-      issuer: "Business Social Compliance Initiative",
-      date: "Valid: 2024 - 2026",
-      credentialId: "BSCI-2024-8891",
-      skills: ["Social Compliance", "Worker Safety", "Ethical Production"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/5/5a/BSCI_logo.png",
-      link: "#",
-      type: "compliance",
+  const { data: certs, isLoading } = useQuery({
+    queryKey: ["public-certifications"],
+    queryFn: async () => {
+      const { data } = await api.get("/certifications/public");
+      return data.data;
     },
-    {
-      id: 2,
-      title: "OEKO-TEX Standard 100",
-      issuer: "OEKO-TEX Association",
-      date: "Certified: 2024",
-      credentialId: "OEKO-TEX-4490",
-      skills: ["Chemical Safety", "Textile Testing", "Eco Friendly"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/5/5d/Oeko_tex_standard_100_logo.svg",
-      link: "#",
-      type: "quality",
-    },
-    {
-      id: 3,
-      title: "WRAP Certification",
-      issuer: "Worldwide Responsible Accredited Production",
-      date: "Certified: 2023",
-      credentialId: "WRAP-8821",
-      skills: ["Ethical Manufacturing", "Labor Rights", "Compliance"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/2/23/WRAP_logo.png",
-      link: "#",
-      type: "compliance",
-    },
-    {
-      id: 4,
-      title: "ISO 9001: Quality Management",
-      issuer: "International Organization for Standardization",
-      date: "Certified: 2024",
-      credentialId: "ISO9001-2024",
-      skills: ["Quality Control", "Production Management"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/a/a0/ISO_9001_Logo.svg",
-      link: "#",
-      type: "quality",
-    },
-    {
-      id: 5,
-      title: "SEDEX Member",
-      issuer: "Supplier Ethical Data Exchange",
-      date: "Member Since: 2023",
-      credentialId: "SEDEX-7782",
-      skills: ["Supply Chain Ethics", "Transparency"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/6/6a/Sedex_logo.png",
-      link: "#",
-      type: "compliance",
-    },
-    {
-      id: 6,
-      title: "GOTS Organic Textile Certification",
-      issuer: "Global Organic Textile Standard",
-      date: "Certified: 2024",
-      credentialId: "GOTS-9902",
-      skills: ["Organic Textile", "Sustainable Production"],
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/4/4b/GOTS_logo.png",
-      link: "#",
-      type: "sustainability",
-    },
-  ];
+  });
 
-  const tabs = [
-    { id: "all", label: "All Certifications" },
-    { id: "compliance", label: "Compliance" },
-    { id: "quality", label: "Quality" },
-    { id: "sustainability", label: "Sustainability" },
-  ];
-
-  const filteredCerts =
-    activeTab === "all"
-      ? certifications
-      : certifications.filter((cert) => cert.type === activeTab);
+  const filteredCerts = useMemo(() => {
+    if (!certs) return [];
+    if (activeTab === "all") return certs;
+    return certs.filter((cert) => cert.type === activeTab);
+  }, [certs, activeTab]);
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-4 pb-24">
+    <>
+      <div className="min-h-screen bg-gray-50 pt-16 pb-24">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-4">
+              <Award size={40} className="text-gray-300" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-light tracking-tighter uppercase mb-4">
+              Factory <span className="font-bold">Certifications</span>
+            </h1>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Manami Fashions Ltd maintains international compliance standards to ensure ethical
+              manufacturing, product quality, and sustainable production practices.
+            </p>
+          </div>
 
-      {/* Header */}
-      <div className="max-w-7xl mx-auto text-center mb-4 px-4">
-        <div className="flex justify-center mb-2">
-          <Award size={40} className="text-blue-600" />
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-black text-white"
+                    : "bg-white border border-gray-200 hover:bg-gray-50 text-gray-600"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 size={24} className="text-gray-300 animate-spin" />
+            </div>
+          ) : filteredCerts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-400 text-lg">No certifications found.</p>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCerts.map((cert) => {
+                const dateLabel = formatDateRange(cert.issueDate, cert.expiryDate);
+                const logoUrl = cert.logo?.url || "";
+
+                return (
+                  <div
+                    key={cert._id}
+                    className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden"
+                  >
+                    <div
+                      className="aspect-[4/3] bg-gray-50 flex items-center justify-center p-6 border-b border-gray-100 cursor-pointer group"
+                      onClick={() => logoUrl && setPreviewCert(cert)}
+                    >
+                      {logoUrl ? (
+                        <img
+                          src={logoUrl}
+                          alt={`${cert.name} certificate`}
+                          className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <Award size={64} className="text-gray-200" />
+                      )}
+                    </div>
+
+                    <div className="p-5">
+                      {dateLabel && (
+                        <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                          <Calendar size={14} />
+                          {dateLabel}
+                        </div>
+                      )}
+
+                      <h3 className="text-lg font-semibold mb-1">{cert.name}</h3>
+                      {cert.issuer && <p className="text-gray-500 text-sm mb-3">{cert.issuer}</p>}
+
+                      {cert.skills?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {cert.skills.map((skill, i) => (
+                            <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {logoUrl && (
+                        <button
+                          onClick={() => setPreviewCert(cert)}
+                          className="inline-flex items-center gap-2 text-sm font-semibold text-black hover:underline"
+                        >
+                          <ExternalLink size={14} />
+                          View Certificate
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-
-        <h1 className="text-4xl md:text-5xl font-bold mb-2">
-          Factory Certifications
-        </h1>
-
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Manami Fashions Ltd maintains international compliance standards to
-          ensure ethical manufacturing, product quality, and sustainable
-          production practices.
-        </p>
       </div>
 
-      {/* Tabs */}
-      <div className="max-w-7xl mx-auto px-4 mb-8 flex flex-wrap justify-center gap-3">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
-              activeTab === tab.id
-                ? "bg-black text-white"
-                : "bg-white border hover:bg-gray-50"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Certification Grid */}
-      <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredCerts.map((cert) => (
+      {previewCert && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setPreviewCert(null)}
+        >
           <div
-            key={cert.id}
-            onMouseEnter={() => setHoveredCard(cert.id)}
-            onMouseLeave={() => setHoveredCard(null)}
-            className="bg-white rounded-xl shadow hover:shadow-lg transition p-6"
+            className="relative max-w-3xl w-full bg-white rounded-xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="h-40 flex items-center justify-center mb-6">
+            <button
+              onClick={() => setPreviewCert(null)}
+              className="absolute top-3 right-3 z-10 bg-black/60 text-white rounded-full p-1.5 hover:bg-black transition-colors"
+            >
+              <X size={18} />
+            </button>
+            <div className="bg-gray-50 flex items-center justify-center p-8">
               <img
-                src={cert.image}
-                alt={cert.title}
-                className="max-h-28 object-contain"
+                src={previewCert.logo?.url}
+                alt={`${previewCert.name} certificate`}
+                className="max-h-[70vh] w-auto object-contain"
               />
             </div>
-
-            <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-              <Calendar size={14} />
-              {cert.date}
+            <div className="p-5">
+              <h3 className="text-xl font-semibold mb-1">{previewCert.name}</h3>
+              {previewCert.issuer && (
+                <p className="text-gray-500 text-sm mb-2">{previewCert.issuer}</p>
+              )}
+              {formatDateRange(previewCert.issueDate, previewCert.expiryDate) && (
+                <p className="text-gray-400 text-sm">
+                  {formatDateRange(previewCert.issueDate, previewCert.expiryDate)}
+                </p>
+              )}
             </div>
-
-            <h3 className="text-xl font-semibold mb-2">{cert.title}</h3>
-
-            <p className="text-gray-500 text-sm mb-3">{cert.issuer}</p>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {cert.skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="text-xs bg-gray-100 px-3 py-1 rounded-full"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-
-            <a
-              href={cert.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline"
-            >
-              <ExternalLink size={16} />
-              View Certificate
-            </a>
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,20 +1,27 @@
-import React from 'react';
+import { Link } from "react-router-dom";
 
 const Error = () => {
-    return (
-       <section className="flex items-center h-full p-16 dark:bg-gray-50 dark:text-gray-800">
-	<div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-		<div className="max-w-md text-center">
-			<h2 className="mb-8 font-extrabold text-9xl dark:text-gray-400">
-				<span className="sr-only">Error</span>404
-			</h2>
-			<p className="text-2xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-			<p className="mt-4 mb-8 dark:text-gray-600">But dont worry, you can find plenty of other things on our homepage.</p>
-			<a rel="noopener noreferrer" href="/" className="px-8 py-3 font-semibold rounded dark:bg-black dark:text-gray-50">Back to homepage</a>
-		</div>
-	</div>
-</section>
-    );
+  return (
+    <section className="flex items-center justify-center min-h-[calc(100vh-64px)] bg-white px-6">
+      <div className="max-w-md text-center">
+        <h2 className="mb-8 font-extrabold text-9xl text-gray-200">
+          <span className="sr-only">Error</span>404
+        </h2>
+        <p className="text-2xl font-semibold md:text-3xl tracking-tight mb-4">
+          Page Not Found
+        </p>
+        <p className="text-gray-500 mb-8">
+          The page you're looking for doesn't exist or has been moved.
+        </p>
+        <Link
+          to="/"
+          className="inline-block px-8 py-3 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors"
+        >
+          Back to Homepage
+        </Link>
+      </div>
+    </section>
+  );
 };
 
 export default Error;
