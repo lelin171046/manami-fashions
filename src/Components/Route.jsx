@@ -7,6 +7,7 @@ import AdminLayout from "../Admin/components/Layout/AdminLayout.jsx";
 import ProtectedRoute from "../Admin/components/ProtectedRoute.jsx";
 
 const Home = lazy(() => import("../Pages/Home"));
+const AboutUs = lazy(() => import("../Pages/AboutUs"));
 const Products = lazy(() => import("../Pages/Products"));
 const Operations = lazy(() => import("../Pages/Operations"));
 const Certifications = lazy(() => import("../Pages/Certifications"));
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <SuspenseWrapper><Home /></SuspenseWrapper>,
+      },
+      {
+        path: "/about",
+        element: <SuspenseWrapper><AboutUs /></SuspenseWrapper>,
       },
       {
         path: "/products",
