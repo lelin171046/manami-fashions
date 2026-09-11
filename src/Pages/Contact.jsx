@@ -12,7 +12,7 @@ const FALLBACK = {
   factoryCity: "Dhaka-1349, Bangladesh",
   headAddress: "Dhaka, Bangladesh",
   phone: "+880 1711 556121",
-  email: "info@manamifashions.com",
+  email: "info@manamibd.com",
 };
 
 const fadeUp = {

@@ -19,7 +19,7 @@ const Footer = () => {
               <span className="text-lg font-bold tracking-tight">MANAMI FASHIONS LTD</span>
             </NavLink>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              A 100% export-oriented garment manufacturer delivering precision-engineered apparel for global brands since 2010.
+              A 100% export oriented garment manufacturer delivering precision-engineered apparel for global brands since 2010.
             </p>
             <div className="flex gap-4">
               <a
@@ -78,15 +78,19 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail size={16} className="text-gray-500 mt-0.5 shrink-0" />
-                <span className="text-sm text-gray-400">info@manamifashions.com</span>
+                <span className="text-sm text-gray-400"> info@manamibd.com</span>
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={16} className="text-gray-500 mt-0.5 shrink-0" />
-                <span className="text-sm text-gray-400">+880 1711 556121</span>
+                <span className="text-sm text-gray-400">+8801738001243</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-gray-500 mt-0.5 shrink-0" />
-                <span className="text-sm text-gray-400">Kabirpur, Ashulia, Savar, Dhaka-1349, Bangladesh</span>
+                <span className="text-sm text-gray-400">Factory: Kabirpur, Ashulia, Savar, Dhaka-1349, Bangladesh</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin size={16} className="text-gray-500 mt-0.5 shrink-0" />
+                <span className="text-sm text-gray-400">Head Office: House 7/7A, Floor E-9, Sector-17, Block H-1, BGMEA Complex, Uttara, Dhaka-1230, Bangladesh</span>
               </li>
             </ul>
           </div>
@@ -99,7 +103,7 @@ const Footer = () => {
             &copy; {currentYear} Manami Fashions Ltd. All rights reserved.
           </p>
           <p className="text-[10px] text-gray-600 uppercase tracking-widest">
-            BSCI Grade A &bull; 100% Export Oriented &bull; BGMEA #4713
+            Develop by <a href="https://zaman.gt.tc/?i=1#about" target="_blank" rel="noopener noreferrer" className="underline hover:text-white transition-colors">Lelin</a>
           </p>
         </div>
       </div>

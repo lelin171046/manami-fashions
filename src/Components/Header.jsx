@@ -2,15 +2,16 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/Logo.png"; // Adjust the path as necessary
+import logo from "../assets/Logo.png";
+
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
   { to: "/products", label: "Products" },
   { to: "/operations", label: "Operations" },
   { to: "/certifications", label: "Certifications" },
   { to: "/gallery", label: "Highlights" },
   { to: "/buyers", label: "Buyers" },
+  { to: "/about", label: "About Us" },
 ];
 
 const Header = () => {
@@ -18,132 +19,240 @@ const Header = () => {
 
   return (
     <motion.header
-      initial={{ y: -40, opacity: 0 }}
+      initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50"
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="
+        fixed
+        top-0
+        left-0
+        right-0
+        z-50
+        bg-white
+        border-t
+        border-black/20
+        border-b
+        border-black/5
+        font-['Josefin_Sans',sans-serif]
+      "
     >
-      <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="rounded-sm border border-white/10 bg-blend-saturation backdrop-blur-2xl text-black shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
-          <div className="flex items-center justify-between h-20 lg:h-24 px-4 lg:px-6">
-            {/* Logo */}
-            <NavLink to="/" className="flex items-center gap-3">
-              <motion.div
-                whileHover={{ scale: 1, rotate: -2 }}
-                transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="h-16 w-16 lg:h-20 lg:w-20 rounded-sm bg-white p-1 shadow-xl ring-1 ring-white/20"
+      <div className="mx-auto max-w-[1240px] px-5 lg:px-0">
+
+        <div className="h-[66px] flex items-center justify-between">
+
+          {/* ================= LOGO ================= */}
+          <NavLink
+            to="/"
+            className="flex items-center shrink-0"
+          >
+            <motion.img
+              src="https://res.cloudinary.com/dg04kyz8n/image/upload/v1789150151/MFl_Logo_xm63xv.png"
+              alt="Manami Fashions Ltd."
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.2 }}
+              className="w-[48px] h-[48px] object-contain"
+            />
+          </NavLink>
+
+
+          {/* ================= DESKTOP NAV ================= */}
+          <nav className="hidden lg:flex items-center gap-[2px]">
+
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/"}
+                className={({ isActive }) =>
+                  `
+                  relative
+                  px-[16px]
+                  py-2
+                  text-[12px]
+                  font-light
+                  uppercase
+                  tracking-[0.13em]
+                  leading-none
+                  transition-all
+                  duration-300
+                  ${
+                    isActive
+                      ? "text-black"
+                      : "text-[#737983] hover:text-black"
+                  }
+                  `
+                }
               >
-                {/* Replace with your actual logo */}
-                <img
-                  src={logo}
-                  alt="Manami Fashions Ltd."
-                  className="h-full w-full object-contain rounded-sm"
-                />
-              </motion.div>
+                {({ isActive }) => (
+                  <>
+                    {link.label}
 
-              <div className="hidden md:block">
-              
-                
-              </div>
-            </NavLink>
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeNav"
+                        className="
+                          absolute
+                          left-[16px]
+                          right-[16px]
+                          -bottom-[4px]
+                          h-[1px]
+                          bg-black
+                        "
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 35,
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            ))}
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-2">
-              {navLinks.map((link) => (
-                <NavLink key={link.to} to={link.to} end={link.to === "/"} className="relative px-4 py-2 text-xl font-medium tracking-wide text-black/80 hover:text-green-500 transition-colors duration-300">
-                  {({ isActive }) => (
-                    <>
-                      <span>{link.label}</span>
-                      {isActive && (
-                        <motion.span
-                          layoutId="nav-indicator"
-                          className="absolute left-4 right-4 -bottom-1 h-[2px] rounded-full bg-lime-400"
-                          transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                        />
-                      )}
-                    </>
-                  )}
-                </NavLink>
-              ))}
-            </nav>
+          </nav>
 
-            {/* CTA */}
-            <div className="hidden lg:block">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <NavLink
-                  to="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-[#0F4C81] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-300 hover:bg-[#15619E]"
-                >
-                  Let's Talk
-                </NavLink>
-              </motion.div>
-            </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 p-3 text-white backdrop-blur-md transition hover:bg-white/15"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
+          {/* ================= CONTACT ================= */}
+          <div className="hidden lg:block">
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+              <NavLink
+                to="/contact"
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  h-[33px]
+                  min-w-[104px]
+                  px-5
+                  bg-black
+                  text-white
+                  text-[11px]
+                  font-light
+                  uppercase
+                  tracking-[0.18em]
+                  leading-none
+                  transition-all
+                  duration-300
+                  hover:bg-[#222]
+                "
+              >
+                Contact
+              </NavLink>
+            </motion.div>
+
           </div>
 
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {menuOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="overflow-hidden lg:hidden border-t border-white/10 bg-[#041B2D]/90 backdrop-blur-2xl rounded-b-[28px]"
-              >
-                <div className="px-4 py-4">
-                  {navLinks.map((link, index) => (
-                    <motion.div
-                      key={link.to}
-                      initial={{ x: -12, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <NavLink
-                        to={link.to}
-                        end={link.to === "/"}
-                        onClick={() => setMenuOpen(false)}
-                        className={({ isActive }) =>
-                          `block rounded-2xl px-4 py-3 text-sm font-medium transition ${
-                            isActive
-                              ? "bg-white/10 text-white"
-                              : "text-white/80 hover:bg-white/10 hover:text-white"
-                          }`
-                        }
-                      >
-                        {link.label}
-                      </NavLink>
-                    </motion.div>
-                  ))}
 
-                  <motion.div
-                    initial={{ y: 8, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.25 }}
-                    className="pt-4"
-                  >
-                    <NavLink
-                      to="/contact"
-                      onClick={() => setMenuOpen(false)}
-                      className="block rounded-full bg-[#0F4C81] py-3 text-center text-sm font-semibold text-white hover:bg-[#15619E] transition"
-                    >
-                      Let's Talk
-                    </NavLink>
-                  </motion.div>
-                </div>
-              </motion.div>
+          {/* ================= MOBILE BUTTON ================= */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="
+              lg:hidden
+              flex
+              items-center
+              justify-center
+              w-10
+              h-10
+              text-black
+              border
+              border-black/10
+              hover:bg-gray-50
+              transition-colors
+            "
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? (
+              <X size={21} strokeWidth={1.5} />
+            ) : (
+              <Menu size={21} strokeWidth={1.5} />
             )}
-          </AnimatePresence>
+          </button>
+
         </div>
+
+
+        {/* ================= MOBILE MENU ================= */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="
+                lg:hidden
+                overflow-hidden
+                border-t
+                border-black/10
+                bg-white
+              "
+            >
+
+              <div className="py-3">
+
+                {navLinks.map((link) => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.to === "/"}
+                    onClick={() => setMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `
+                      block
+                      px-5
+                      py-4
+                      text-[12px]
+                      font-light
+                      uppercase
+                      tracking-[0.14em]
+                      transition-colors
+                      ${
+                        isActive
+                          ? "text-black bg-gray-50"
+                          : "text-[#737983] hover:text-black hover:bg-gray-50"
+                      }
+                      `
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+
+
+                <NavLink
+                  to="/contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="
+                    block
+                    mx-4
+                    mt-3
+                    py-3
+                    text-center
+                    bg-black
+                    text-white
+                    text-[11px]
+                    font-light
+                    uppercase
+                    tracking-[0.18em]
+                    hover:bg-[#222]
+                    transition-colors
+                  "
+                >
+                  Contact
+                </NavLink>
+
+              </div>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
     </motion.header>
   );

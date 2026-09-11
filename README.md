@@ -1,6 +1,6 @@
 # Manami Fashions Ltd.
 
-A professional corporate website for **Manami Fashions Ltd.** — a 100% export-oriented knit & woven garment manufacturer based in Dhaka, Bangladesh.
+A professional corporate website for **Manami Fashions Ltd.** — a 100% export oriented knit & woven garment manufacturer based in Dhaka, Bangladesh.
 
 ## Live Overview
 

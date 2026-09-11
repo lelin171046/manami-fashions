@@ -219,14 +219,7 @@ const Operations = () => {
         </motion.div>
 
         {/* Bottom tags */}
-        <div className="mt-24 flex flex-wrap gap-x-12 gap-y-4 opacity-40 grayscale">
-          {["100% Export Oriented", "BSCI Grade A", "ISO Certified", "BGMEA Registered"].map((tag) => (
-            <div key={tag} className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-black rounded-full" />
-              <span className="text-[10px] uppercase tracking-widest font-bold">{tag}</span>
-            </div>
-          ))}
-        </div>
+      
       </div>
     </div>
   );

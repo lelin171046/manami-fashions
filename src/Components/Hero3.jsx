@@ -62,7 +62,7 @@ const HeroBackground = memo(() => {
   const slide = SLIDES[current];
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden font-sans">
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
@@ -85,22 +85,33 @@ const HeroBackground = memo(() => {
         {SLIDES.map((_, i) => (
           <button
             key={i}
-            onClick={() => { paginate(i - current); startInterval(); }}
+            onClick={() => {
+              paginate(i - current);
+              startInterval();
+            }}
             className={`transition-all duration-700 rounded-full ${
-              i === current ? "w-12 h-[3px] bg-white" : "w-3 h-[3px] bg-white/30 hover:bg-white/60"
+              i === current
+                ? "w-12 h-[3px] bg-white"
+                : "w-3 h-[3px] bg-white/30 hover:bg-white/60"
             }`}
           />
         ))}
       </div>
 
       <button
-        onClick={() => { paginate(-1); startInterval(); }}
+        onClick={() => {
+          paginate(-1);
+          startInterval();
+        }}
         className="absolute left-6 top-1/2 -translate-y-1/2 z-20 text-white/30 hover:text-white transition-colors duration-300 hidden md:block"
       >
         <ChevronLeft size={28} />
       </button>
       <button
-        onClick={() => { paginate(1); startInterval(); }}
+        onClick={() => {
+          paginate(1);
+          startInterval();
+        }}
         className="absolute right-6 top-1/2 -translate-y-1/2 z-20 text-white/30 hover:text-white transition-colors duration-300 hidden md:block"
       >
         <ChevronRight size={28} />
@@ -118,7 +129,11 @@ const Letters = memo(({ text, delay = 0, className = "" }) => (
         key={i}
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: delay + i * 0.03, ease: [0.25, 0.1, 0.25, 1] }}
+        transition={{
+          duration: 0.4,
+          delay: delay + i * 0.03,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
         className="inline-block"
       >
         {char === " " ? "\u00A0" : char}
@@ -129,50 +144,7 @@ const Letters = memo(({ text, delay = 0, className = "" }) => (
 
 Letters.displayName = "Letters";
 
-const HeroStats = memo(() => {
-  const [started, setStarted] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const stats = [
-    { value: 12.5, suffix: "M+", label: "Annual Production", decimals: 1 },
-    { value: 4500, suffix: "+", label: "Employees" },
-    { value: 28, suffix: "", label: "Production Lines" },
-    { value: 35, suffix: "+", label: "Export Countries" },
-    { value: 98, suffix: "%", label: "On-Time Delivery" },
-  ];
-
-  return (
-    <div ref={ref} className="w-full bg-white border-t border-gray-100">
-      <div className="max-w-screen-xl mx-auto px-6 md:px-8 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {stats.map((stat, i) => (
-            <div key={stat.label} className="text-center">
-              <CountUp end={stat.value} decimals={stat.decimals || 0} started={started} delay={i * 0.1} />
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-});
-
-HeroStats.displayName = "HeroStats";
-
-const CountUp = ({ end, decimals = 0, started, delay = 0 }) => {
+const CountUp = ({ end, decimals = 0, started, delay = 0, suffix = "" }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -194,15 +166,74 @@ const CountUp = ({ end, decimals = 0, started, delay = 0 }) => {
   }, [started, end, delay]);
 
   return (
-    <p className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
-      {count.toFixed(decimals)}
-      <span className="text-gray-900">{end >= 1000 ? "" : ""}</span>
+    <p className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight font-sans">
+      {count.toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
     </p>
   );
 };
 
+const HeroStats = memo(() => {
+  const [started, setStarted] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="w-full font-sans bg-white border-t border-gray-100">
+      <div className="max-w-screen-xl mx-auto px-6 md:px-8 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="text-center">
+            <CountUp end={700} decimals={0} started={started} />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
+              Work Stations
+            </p>
+          </div>
+          <div className="text-center">
+            <CountUp end={20} started={started} delay={0.4} />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
+              Production Lines
+            </p>
+          </div>
+          <div className="text-center">
+            <CountUp end={1260000} suffix="+" started={started} delay={0.6} />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
+              Sewing capacity per month
+            </p>
+          </div>
+          <div className="text-center">
+            <CountUp end={98} suffix="%" started={started} delay={0.8} />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
+              On-Time Delivery
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+HeroStats.displayName = "HeroStats";
+
 const HeroContent = memo(() => (
-  <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+  <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center font-sans">
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -230,7 +261,7 @@ const HeroContent = memo(() => (
       transition={{ duration: 0.6, delay: 1.2 }}
       className="text-white/40 text-sm md:text-base font-light max-w-lg mx-auto mt-4 mb-10 leading-relaxed"
     >
-      A 100% export-oriented garment manufacturer delivering precision-engineered apparel for global leaders.
+      A 100% export oriented garment manufacturer delivering precision-engineered apparel for global leaders.
     </motion.p>
 
     <motion.div
@@ -271,7 +302,7 @@ const HeroContent = memo(() => (
 HeroContent.displayName = "HeroContent";
 
 const Hero3 = () => (
-  <div className="bg-white">
+  <div className="bg-white font-sans">
     <section className="relative min-h-screen flex items-center overflow-hidden bg-gray-900">
       <HeroBackground />
       <HeroContent />

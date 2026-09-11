@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../api/axios.js";
 import {
@@ -29,6 +29,7 @@ const menu = [
 
 const Sidebar = ({ open, onClose }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const { data: unreadCount } = useQuery({
     queryKey: ["contact-unread-count"],
@@ -44,7 +45,10 @@ const Sidebar = ({ open, onClose }) => {
   const content = (
     <div className="h-full flex flex-col bg-zinc-900">
       <div className="h-16 flex items-center justify-between px-5 border-b border-white/10">
-        <Link to="/admin" className="flex items-center gap-3" onClick={onClose}>
+        <button
+          onClick={() => { navigate("/", { replace: true }); onClose(); }}
+          className="flex items-center gap-3 w-full text-left"
+        >
           <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center">
             <span className="text-zinc-900 font-bold text-sm tracking-tighter">M</span>
           </div>
@@ -52,7 +56,7 @@ const Sidebar = ({ open, onClose }) => {
             <div className="text-white text-sm font-bold tracking-tight leading-none">Manami</div>
             <div className="text-gray-400 text-[10px] uppercase tracking-[0.2em]">Admin Panel</div>
           </div>
-        </Link>
+        </button>
         <button onClick={onClose} className="lg:hidden text-gray-400 hover:text-white">
           <X size={20} />
         </button>
