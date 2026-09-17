@@ -55,10 +55,10 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-white">Products</h3>
             <ul className="space-y-3">
-              <li><NavLink to="/products" className="text-sm text-gray-400 hover:text-white transition-colors">Menswear</NavLink></li>
-              <li><NavLink to="/products" className="text-sm text-gray-400 hover:text-white transition-colors">Womenswear</NavLink></li>
-              <li><NavLink to="/products" className="text-sm text-gray-400 hover:text-white transition-colors">Kids Wear</NavLink></li>
-              <li><NavLink to="/products" className="text-sm text-gray-400 hover:text-white transition-colors">Active & Innerwear</NavLink></li>
+              <li><NavLink to="/products/men" className="text-sm text-gray-400 hover:text-white transition-colors">Menswear</NavLink></li>
+              <li><NavLink to="/products/women" className="text-sm text-gray-400 hover:text-white transition-colors">Womenswear</NavLink></li>
+              <li><NavLink to="/products/kids" className="text-sm text-gray-400 hover:text-white transition-colors">Kids Wear</NavLink></li>
+              <li><NavLink to="/products/active-innerwear" className="text-sm text-gray-400 hover:text-white transition-colors">Active & Innerwear</NavLink></li>
             </ul>
           </div>
 

@@ -91,15 +91,7 @@ const Vision = () => {
           ))}
         </div>
 
-        <div className="mt-24 pt-10 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] text-gray-500 uppercase tracking-[0.4em] font-medium">
-            Customer satisfaction is our ultimate gratification.
-          </p>
-          <div className="flex gap-2 items-center">
-            <div className="w-12 h-[1px] bg-gray-700" />
-            <span className="text-[9px] uppercase tracking-widest font-bold">JOYJATRA INITIATIVE</span>
-          </div>
-        </div>
+     
       </div>
     </section>
   );

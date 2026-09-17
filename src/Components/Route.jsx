@@ -56,6 +56,10 @@ const router = createBrowserRouter([
         element: <SuspenseWrapper><Products /></SuspenseWrapper>,
       },
       {
+        path: "/products/:categorySlug",
+        element: <SuspenseWrapper><Products /></SuspenseWrapper>,
+      },
+      {
         path: "/operations",
         element: <SuspenseWrapper><Operations /></SuspenseWrapper>,
       },

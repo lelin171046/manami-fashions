@@ -203,7 +203,7 @@ const HeroStats = memo(() => {
           <div className="text-center">
             <CountUp end={700} decimals={0} started={started} />
             <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
-              Work Stations
+             Sewing Machines Capacity
             </p>
           </div>
           <div className="text-center">
@@ -213,15 +213,15 @@ const HeroStats = memo(() => {
             </p>
           </div>
           <div className="text-center">
-            <CountUp end={1260000} suffix="+" started={started} delay={0.6} />
+            <CountUp end={10} suffix="M pcs" started={started} delay={0.6} />
             <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
               Sewing capacity per month
             </p>
           </div>
           <div className="text-center">
-            <CountUp end={98} suffix="%" started={started} delay={0.8} />
+            <CountUp end={25} suffix="M USD" started={started} delay={0.8} />
             <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium mt-1.5">
-              On-Time Delivery
+             Annual Turnover
             </p>
           </div>
         </div>

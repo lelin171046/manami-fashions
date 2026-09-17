@@ -38,7 +38,7 @@ const rows = [
     value: (
       <div>
         <p className="font-medium text-neutral-900 tracking-tight">Mohsin Faisal <span className="text-xs text-neutral-400 font-normal font-mono ml-1.5">(Managing Director)</span></p>
-        <p className="text-xs text-neutral-500 font-mono mt-1 tracking-tight">faisal@manamibd.com &bull; +880 1713 273162</p>
+        <p className="text-xs text-neutral-500 font-mono mt-1 tracking-tight">faisal@manamibd.com &bull;</p>
       </div>
     ),
     icon: UserSquare2,
@@ -75,6 +75,13 @@ const rows = [
       </div>
     ), icon: Factory },
   { label: "Facility Footprint", value: "110,000 sq. ft.", icon: Ruler },
+
+  { label: "Sewing Efficiency", value: (
+    <div className="space-y-2 text-sm md:text-base">
+      <p className="text-neutral-800">65%</p>
+     
+    </div>
+  ), icon: BadgeCheck },    
 ];
 
 const FactoryProfile = () => {
@@ -151,16 +158,7 @@ const FactoryProfile = () => {
           })}
         </div>
 
-        <footer className="mt-32 pt-12 border-t border-neutral-100 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-wrap gap-6">
-            {["100% Export", "BSCI Grade A", "BGMEA"].map((tag) => (
-              <span key={tag} className="text-[10px] font-semibold tracking-[0.25em] uppercase text-neutral-400 font-mono">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="text-[10px] font-mono text-neutral-400 tracking-wider">CONFIDENTIAL // MFL-ST-026</div>
-        </footer>
+   
       </div>
     </section>
   );

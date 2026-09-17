@@ -1,148 +1,789 @@
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useAnimationFrame } from "framer-motion";
 
 const certData = [
-  { name: "amfori BSCI", img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076121/20170426104313_BCI_Logo_2015_m6vfni.png" },
-  { name: "OEKO-TEX", img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076120/Oeko-tex_standard100_logo_rgb-2022_a8e41h.jpg" },
-  { name: "SEDEX", img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076121/20170426104313_BCI_Logo_2015_m6vfni.png" },
-  { name: "WRAP", img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076121/20170426104313_BCI_Logo_2015_m6vfni.png" },
-  { name: "GOTS", img: "https://cdn.shopify.com/s/files/1/0255/5976/0973/files/gots_logo_copy_240x240.png?v=1569937434" },
-  { name: "GRS", img: "https://www.sinox-polymers.com/files/sinox-custom/images/certifications/global-recycled-standard-grs-zertifizierung-sinox-polymers.png" },
-  { name: "ISO 9001", img: "https://www.iso-9001-checklist.co.uk/wp-content/uploads/2024/04/iso-9001-certified-stamp.webp" },
-  { name: "ISO 14001", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOtSCbks1G8Q5idQNXK-Uk8h_OK-Q3A34VUA&s" },
-  { name: "Better Work", img: "https://www.betterwork.org/wp-content/uploads/BW-Bangladesh-Stacked-rgb.png" },
-  { name: "OCS", img: "https://rkcotweaving.com/wp-content/uploads/2024/04/ocs-certificate.webp" },
-  { name: "FSC", img: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Forest_Stewardship_Council_%28logo%29.svg/1280px-Forest_Stewardship_Council_%28logo%29.svg.png" },
-  { name: "SA8000", img: "https://5.imimg.com/data5/SELLER/Default/2024/11/465177391/GS/HN/RF/30601387/sa-8000-certification-services.png" },
-  { name: "Fair Trade", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8H1m8FFtezr-xZtNeMsC6snTEA2T5QBqA1w&s" },
-  { name: "Higg Index", img: "https://www.minlan.com.tw/wp-content/uploads/2020/03/higg-index-logo-vector.png" },
+  {
+    name: "GOTS",
+    img: "https://cdn.shopify.com/s/files/1/0255/5976/0973/files/gots_logo_copy_240x240.png?v=1569937434",
+  },
+  {
+    name: "Better Work",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575493/BW-Bangladesh-Stacked-rgb.png",
+  },
+  {
+    name: "BCI",
+    img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076121/20170426104313_BCI_Logo_2015_m6vfni.png",
+  },
+  {
+    name: "OEKO-TEX",
+    img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076120/Oeko-tex_standard100_logo_rgb-2022_a8e41h.jpg",
+  },
+  {
+    name: "Higg Index",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575834/Higg-Index-1024x688.png",
+  },
+  {
+    name: "Fair Trade",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575397/fairtrade-logo-png_seeklogo-307009.png",
+  },
+  {
+    name: "GRS",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575910/global-recycled-standard-grs-zertifizierung-sinox-polymers.png",
+  },
+  {
+    name: "Recycled 100",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575130/Recycled-Claim-Standard-Logo.png",
+  },
+  {
+    name: "ISO 14001",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789576148/Gemini_Generated_Image_3x8m2t3x8m2t3x8m.jpg",
+  },
+  {
+    name: "WRAP",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789575306/global-organic-textile-standard-gots-vector-logo.png",
+  },
+  {
+    name: "Sedex",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789576325/45838853-d8a6-40a0-9020-69f3a4291135.png",
+  },
+  {
+    name: "RSC",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789576645/8c50cb02-929b-4e20-aaa4-d7fdf5c2187c.png",
+  },
+  {
+    name: "Alliance",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789577169/WhatsApp_Image_2026-09-16_at_10.37.02_PM.jpg",
+  },
+  {
+    name: "amfori BSCI",
+    img: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1773076121/20170426104313_BCI_Logo_2015_m6vfni.png",
+  },
+  {
+    name: "SCAN",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789578018/Gemini_Generated_Image_cm08kccm08kccm08-removebg-preview.png",
+  },
+  {
+    name: "Her+ Project",
+    img: "https://res.cloudinary.com/doyqpt8ep/image/upload/v1789577916/Gemini_Generated_Image_qa9ib3qa9ib3qa9i-removebg-preview.png",
+  },
 ];
 
 const allCerts = [...certData, ...certData];
 
 const Cer = () => {
+  /*
+   * Bigger radius = bigger spherical layout
+   * with more breathing room between logos.
+   */
   const [radius, setRadius] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 768 ? 130 : 190
+    typeof window !== "undefined" && window.innerWidth < 768
+      ? 175
+      : 285
   );
+
   const [hovered, setHovered] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const containerRef = useRef(null);
-  const rotation = useRef(0);
-  const paused = useRef(false);
 
+  const rotationX = useRef(-0.12);
+  const rotationY = useRef(0);
+
+  const dragging = useRef(false);
+  const lastPointer = useRef({ x: 0, y: 0 });
+  const autoRotate = useRef(true);
+
+  /*
+   * Responsive sphere size
+   */
   useEffect(() => {
-    const onResize = () => setRadius(window.innerWidth < 768 ? 130 : 190);
+    const onResize = () => {
+      setRadius(window.innerWidth < 768 ? 175 : 285);
+    };
+
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
-  const positions = useMemo(
-    () =>
-      allCerts.map((_, i) => {
-        const phi = Math.acos(-1 + (2 * i) / allCerts.length);
-        const theta = Math.sqrt(allCerts.length * Math.PI) * phi;
-        return {
-          x: radius * Math.cos(theta) * Math.sin(phi),
-          y: radius * Math.sin(theta) * Math.sin(phi),
-          z: radius * Math.cos(phi),
-        };
-      }),
-    [radius]
-  );
+  /*
+   * Generate evenly distributed points
+   * around the spherical surface.
+   */
+  const positions = useMemo(() => {
+    return allCerts.map((_, i) => {
+      const phi = Math.acos(
+        -1 + (2 * i) / allCerts.length
+      );
 
+      const theta =
+        Math.sqrt(allCerts.length * Math.PI) * phi;
+
+      return {
+        x:
+          radius *
+          Math.cos(theta) *
+          Math.sin(phi),
+
+        y:
+          radius *
+          Math.sin(theta) *
+          Math.sin(phi),
+
+        z:
+          radius *
+          Math.cos(phi),
+      };
+    });
+  }, [radius]);
+
+  /*
+   * ---------------------------------------
+   * Mouse / Touch Start
+   * ---------------------------------------
+   */
+  const handlePointerDown = (e) => {
+    dragging.current = true;
+    autoRotate.current = false;
+
+    setIsDragging(true);
+
+    lastPointer.current = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+
+    e.currentTarget.setPointerCapture?.(
+      e.pointerId
+    );
+  };
+
+  /*
+   * ---------------------------------------
+   * Mouse / Touch Move
+   * ---------------------------------------
+   */
+  const handlePointerMove = (e) => {
+    if (!dragging.current) return;
+
+    const deltaX =
+      e.clientX - lastPointer.current.x;
+
+    const deltaY =
+      e.clientY - lastPointer.current.y;
+
+    lastPointer.current = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+
+    /*
+     * Horizontal drag
+     */
+    rotationY.current += deltaX * 0.007;
+
+    /*
+     * Vertical drag
+     */
+    rotationX.current += deltaY * 0.004;
+
+    /*
+     * Keep sphere controllable
+     */
+    rotationX.current = Math.max(
+      -Math.PI / 2,
+      Math.min(
+        Math.PI / 2,
+        rotationX.current
+      )
+    );
+  };
+
+  /*
+   * ---------------------------------------
+   * Mouse / Touch End
+   * ---------------------------------------
+   */
+  const handlePointerUp = (e) => {
+    dragging.current = false;
+
+    setIsDragging(false);
+
+    e.currentTarget.releasePointerCapture?.(
+      e.pointerId
+    );
+
+    /*
+     * Resume automatic rotation
+     * after a short pause.
+     */
+    setTimeout(() => {
+      if (!dragging.current) {
+        autoRotate.current = true;
+      }
+    }, 1500);
+  };
+
+  /*
+   * ---------------------------------------
+   * 3D Animation
+   * ---------------------------------------
+   */
   useAnimationFrame((time, delta) => {
-    if (paused.current) return;
-
-    const breath = 1 + 0.25 * Math.sin(time * 0.0005);
-    rotation.current += delta * 0.00011 * breath;
-
-    const rotateY = rotation.current;
     const container = containerRef.current;
+
     if (!container) return;
 
-    positions.forEach((pos, i) => {
-      const x = pos.x * Math.cos(rotateY) - pos.z * Math.sin(rotateY);
-      const z = pos.x * Math.sin(rotateY) + pos.z * Math.cos(rotateY);
-      const scale = (z + radius) / (2 * radius);
+    /*
+     * Slow automatic rotation.
+     */
+    if (
+      autoRotate.current &&
+      !dragging.current
+    ) {
+      rotationY.current +=
+        delta * 0.00016;
+    }
 
-      const el = container.children[i];
+    const cosY = Math.cos(
+      rotationY.current
+    );
+
+    const sinY = Math.sin(
+      rotationY.current
+    );
+
+    const cosX = Math.cos(
+      rotationX.current
+    );
+
+    const sinX = Math.sin(
+      rotationX.current
+    );
+
+    positions.forEach((pos, i) => {
+      /*
+       * Rotate Y
+       */
+      let x =
+        pos.x * cosY -
+        pos.z * sinY;
+
+      let z =
+        pos.x * sinY +
+        pos.z * cosY;
+
+      /*
+       * Rotate X
+       */
+      let y =
+        pos.y * cosX -
+        z * sinX;
+
+      z =
+        pos.y * sinX +
+        z * cosX;
+
+      /*
+       * -----------------------------------
+       * DEPTH
+       * -----------------------------------
+       *
+       * 0 = very back
+       * 1 = very front
+       */
+      const depth =
+        (z + radius) /
+        (radius * 2);
+
+      /*
+       * -----------------------------------
+       * SCALE
+       * -----------------------------------
+       *
+       * Back:
+       * ~0.72
+       *
+       * Middle:
+       * ~0.95
+       *
+       * Front:
+       * ~1.30
+       */
+      const depthScale =
+        0.72 +
+        depth * 0.58;
+
+      /*
+       * -----------------------------------
+       * OPACITY
+       * -----------------------------------
+       *
+       * Keep back logos visible.
+       */
+      const opacity =
+        0.62 +
+        depth * 0.38;
+
+      /*
+       * -----------------------------------
+       * VERY LIGHT BLUR
+       * -----------------------------------
+       *
+       * Only extreme back gets tiny blur.
+       */
+      const blur =
+        depth < 0.18
+          ? (0.18 - depth) * 1.5
+          : 0;
+
+      const el =
+        container.children[i];
+
       if (!el) return;
-      el.style.transform = `translate3d(${x}px, ${pos.y}px, 0) scale(${0.55 + scale})`;
-      el.style.opacity = String(0.35 + scale);
-      el.style.filter = `blur(${(1 - scale) * 2.5}px)`;
-      el.style.zIndex = String(Math.floor(scale * 100));
+
+      /*
+       * Hover scale is handled by
+       * the inner logo card.
+       */
+      el.style.transform = `
+        translate3d(
+          ${x}px,
+          ${y}px,
+          0
+        )
+        scale(${depthScale})
+      `;
+
+      el.style.opacity =
+        String(opacity);
+
+      el.style.filter =
+        `blur(${blur}px)`;
+
+      /*
+       * Front objects get higher z-index.
+       *
+       * This allows the logos to move
+       * in front of the count badge.
+       */
+      el.style.zIndex =
+        String(
+          Math.floor(depth * 1000)
+        );
     });
   });
 
   return (
-    <section className="w-full h-[420px] lg:h-[560px] flex items-center justify-center overflow-hidden">
+    <section
+      className="
+        relative
+        w-full
+        h-[600px]
+        lg:h-[760px]
+        flex
+        items-center
+        justify-center
+        overflow-hidden
+        select-none
+      "
+    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative w-[300px] h-[300px] lg:w-[500px] lg:h-[500px]"
-      >
-        {/* soft vignette */}
-        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.05)_0%,rgba(0,0,0,0)_70%)]" />
+        initial={{
+          opacity: 0,
+          scale: 0.85,
+        }}
+        whileInView={{
+          opacity: 1,
+          scale: 1,
+        }}
+        viewport={{
+          once: true,
+          margin: "-80px",
+        }}
+        transition={{
+          duration: 0.9,
+          ease: "easeOut",
+        }}
+        className="
+          relative
 
-        {/* orbit ring */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-3 lg:inset-6 rounded-full border border-dashed border-gray-200"
+          w-[440px]
+          h-[440px]
+
+          lg:w-[680px]
+          lg:h-[680px]
+        "
+      >
+        {/* =================================
+            SPHERE AMBIENT GLOW
+        ================================= */}
+        <div
+          className="
+            absolute
+            inset-[8%]
+            rounded-full
+
+            bg-[radial-gradient(
+              circle,
+              rgba(0,0,0,0.07)_0%,
+              rgba(0,0,0,0.025)_40%,
+              transparent_72%
+            )]
+
+            pointer-events-none
+          "
         />
 
+        {/* =================================
+            LARGE ORBIT RING
+        ================================= */}
+        <motion.div
+          animate={{
+            rotate: 360,
+          }}
+          transition={{
+            duration: 55,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="
+            absolute
+
+            inset-[4%]
+
+            rounded-full
+
+            border
+            border-dashed
+            border-gray-200/80
+
+            pointer-events-none
+          "
+        />
+
+        {/* =================================
+            SECOND SUBTLE ORBIT
+        ================================= */}
+        <div
+          className="
+            absolute
+            inset-[13%]
+
+            rounded-full
+
+            border
+            border-gray-100
+
+            pointer-events-none
+          "
+        />
+
+        {/* =================================
+            CERTIFICATION SPHERE
+        ================================= */}
         <div
           ref={containerRef}
-          className="absolute inset-0 flex items-center justify-center"
-          aria-hidden
+          onPointerDown={
+            handlePointerDown
+          }
+          onPointerMove={
+            handlePointerMove
+          }
+          onPointerUp={
+            handlePointerUp
+          }
+          onPointerCancel={
+            handlePointerUp
+          }
+          className={`
+            absolute
+            inset-0
+
+            flex
+            items-center
+            justify-center
+
+            ${
+              isDragging
+                ? "cursor-grabbing"
+                : "cursor-grab"
+            }
+          `}
+          style={{
+            touchAction: "none",
+          }}
         >
-          {allCerts.map((cert, i) => (
-            <div
-              key={i}
-              className="absolute will-change-transform"
-              onMouseEnter={() => { paused.current = true; setHovered(i); }}
-              onMouseLeave={() => { paused.current = false; setHovered(null); }}
-            >
+          {allCerts.map(
+            (cert, i) => (
               <div
-                className={`relative w-11 h-11 lg:w-14 lg:h-14 flex items-center justify-center rounded-lg bg-white/90 shadow-sm backdrop-blur-sm border border-gray-100 transition-all duration-300 ${
-                  hovered === i ? "scale-125 shadow-md z-50" : ""
-                }`}
+                key={`${cert.name}-${i}`}
+                className="
+                  absolute
+
+                  will-change-transform
+
+                  pointer-events-auto
+                "
+                onMouseEnter={() => {
+                  if (
+                    !dragging.current
+                  ) {
+                    autoRotate.current =
+                      false;
+
+                    setHovered(i);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (
+                    !dragging.current
+                  ) {
+                    autoRotate.current =
+                      true;
+
+                    setHovered(null);
+                  }
+                }}
               >
-                <img
-                  src={cert.img}
-                  alt={`${cert.name} certification`}
-                  className="w-3/4 h-3/4 object-contain"
-                  loading="lazy"
-                  draggable={false}
-                />
+                {/* =============================
+                    LOGO CARD
+                ============================= */}
+                <div
+                  className={`
+                    relative
+
+                    w-[68px]
+                    h-[68px]
+
+                    lg:w-[82px]
+                    lg:h-[82px]
+
+                    flex
+                    items-center
+                    justify-center
+
+                    rounded-2xl
+
+                    bg-white
+
+                    border
+                    border-gray-200
+
+                    shadow-lg
+
+                    transition-transform
+                    duration-300
+                    ease-out
+
+                    ${
+                      hovered === i
+                        ? "scale-[1.18] shadow-2xl border-gray-300"
+                        : ""
+                    }
+                  `}
+                >
+                  <img
+                    src={cert.img}
+                    alt={`${cert.name} certification`}
+                    className="
+                      w-[82%]
+                      h-[82%]
+
+                      object-contain
+
+                      pointer-events-none
+                    "
+                    loading="lazy"
+                    draggable={false}
+                  />
+                </div>
+
+                {/* =============================
+                    NAME ON HOVER
+                ============================= */}
+                <div
+                  className={`
+                    absolute
+
+                    left-1/2
+                    -translate-x-1/2
+
+                    -top-11
+
+                    whitespace-nowrap
+
+                    px-3
+                    py-1.5
+
+                    rounded-lg
+
+                    bg-black
+                    text-white
+
+                    text-[10px]
+
+                    font-semibold
+
+                    uppercase
+
+                    tracking-[0.14em]
+
+                    shadow-xl
+
+                    transition-all
+                    duration-200
+
+                    ${
+                      hovered === i
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-1 pointer-events-none"
+                    }
+                  `}
+                >
+                  {cert.name}
+                </div>
               </div>
-              <span
-                className={`absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-gray-900 bg-white/95 backdrop-blur-sm border border-gray-100 px-2.5 py-1 rounded-md shadow-sm transition-opacity duration-200 ${
-                  hovered === i ? "opacity-100" : "opacity-0 pointer-events-none"
-                }`}
-              >
-                {cert.name}
-              </span>
-            </div>
-          ))}
+            )
+          )}
         </div>
 
-        {/* center badge */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        {/* =================================
+            CENTER COUNT
+            LOW Z-INDEX = BEHIND LOGOS
+        ================================= */}
+        <div
+          className="
+            absolute
+            inset-0
+
+            flex
+            items-center
+            justify-center
+
+            pointer-events-none
+
+            z-0
+          "
+        >
           <motion.div
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-black text-white flex items-center justify-center text-center shadow-xl"
+            animate={{
+              scale: [
+                1,
+                1.035,
+                1,
+              ],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="
+              relative
+
+              w-[145px]
+              h-[145px]
+
+              lg:w-[180px]
+              lg:h-[180px]
+
+              rounded-full
+
+              bg-black
+              text-white
+
+              flex
+              items-center
+              justify-center
+
+              text-center
+
+              shadow-2xl
+            "
           >
+            <div
+              className="
+                absolute
+                inset-2
+
+                rounded-full
+
+                border
+                border-white/10
+              "
+            />
+
             <div>
-              <span className="block text-2xl lg:text-3xl font-bold tracking-tight">{allCerts.length / 2}+</span>
-              <span className="block text-[8px] lg:text-[9px] uppercase tracking-[0.2em] text-white/60 mt-1 px-2">
-                Global Certifications
+              <span
+                className="
+                  block
+
+                  text-4xl
+                  lg:text-5xl
+
+                  font-bold
+
+                  tracking-tight
+                "
+              >
+                {certData.length}+
+              </span>
+
+              <span
+                className="
+                  block
+
+                  text-[8px]
+                  lg:text-[9px]
+
+                  uppercase
+
+                  tracking-[0.22em]
+
+                  text-white/60
+
+                  mt-2
+
+                  px-5
+                "
+              >
+                Global
+                <br />
+                Certifications
               </span>
             </div>
           </motion.div>
+        </div>
+
+        {/* =================================
+            DRAG HINT
+        ================================= */}
+        <div
+          className="
+            absolute
+
+            bottom-1
+            left-1/2
+            -translate-x-1/2
+
+            whitespace-nowrap
+
+            text-[9px]
+
+            uppercase
+
+            tracking-[0.2em]
+
+            text-gray-400
+
+            pointer-events-none
+          "
+        >
+          Drag to explore
         </div>
       </motion.div>
     </section>
@@ -150,3 +791,4 @@ const Cer = () => {
 };
 
 export default Cer;
+
