@@ -1,11 +1,11 @@
 const Hero2 = () => {
   const images = [
-    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776254793/WhatsApp_Image_2026-04-11_at_3.52.45_PM_clvgrl.jpg",
-    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776254793/WhatsApp_Image_2026-04-11_at_3.52.45_PM_clvgrl.jpg",
-    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776708037/IMG_8167.JPG_jackdx.jpg",
-    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776254793/WhatsApp_Image_2026-04-11_at_5.25.27_PM_c8rrrs.jpg",
-    "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776254791/WhatsApp_Image_2026-04-11_at_2.15.35_PM_mu5m8k.jpg",
+  
     "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583369/1730187215394-Our-Visionaries_yayjrv.jpg",
+    "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583227/WhatsApp_Image_2026-08-24_at_8.52.56_PM_n7l9cq.jpg",
+    "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583369/1730187215394-Our-Visionaries_yayjrv.jpg",
+    "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583227/WhatsApp_Image_2026-08-24_at_8.52.56_PM_n7l9cq.jpg",
+   
   ];
 
   return (

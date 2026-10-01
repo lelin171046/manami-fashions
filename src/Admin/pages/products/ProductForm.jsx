@@ -4,8 +4,100 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import api from "../../../api/axios.js";
 import ImageUpload from "../../components/ui/ImageUpload.jsx";
-import { ArrowLeft, Loader2, Plus, X } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, X, ChevronDown, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
+
+const CategorySelect = ({ categories, register, errors, watch, setValue, disabled }) => {
+  const [mainCategory, setMainCategory] = useState("");
+  const [showSubcategories, setShowSubcategories] = useState(false);
+
+  // categories is now a tree: [{ _id, name, children: [...] }, ...]
+  const mainCategories = categories || [];
+  const selectedMainCategory = mainCategories.find((c) => c._id === mainCategory);
+  const subcategories = selectedMainCategory?.children || [];
+
+  const selectedCategory = watch("category");
+
+  useEffect(() => {
+    if (selectedCategory) {
+      // Find which main category this subcategory belongs to
+      for (const main of mainCategories) {
+        const found = main.children?.find((sub) => sub._id === selectedCategory);
+        if (found) {
+          setMainCategory(main._id);
+          setShowSubcategories(true);
+          break;
+        }
+        // Also check if it's a main category itself
+        if (main._id === selectedCategory && !main.parent) {
+          setMainCategory(main._id);
+          setShowSubcategories(true);
+          break;
+        }
+      }
+    }
+  }, [selectedCategory, mainCategories]);
+
+  const handleMainCategoryChange = (e) => {
+    const value = e.target.value;
+    setMainCategory(value);
+    setShowSubcategories(true);
+    setValue("category", "", { shouldValidate: true });
+  };
+
+  const handleSubcategoryChange = (e) => {
+    setValue("category", e.target.value, { shouldValidate: true });
+  };
+
+  return (
+    <div>
+      <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1.5">Main Category *</label>
+      <select
+        {...register("mainCategory", { required: "Main category is required" })}
+        onChange={handleMainCategoryChange}
+        value={mainCategory}
+        disabled={disabled}
+        className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black"
+      >
+        <option value="">Select main category</option>
+        {mainCategories.map((c) => (
+          <option key={c._id} value={c._id}>{c.name}</option>
+        ))}
+      </select>
+
+      {showSubcategories && subcategories.length > 0 && (
+        <div className="mt-3">
+          <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1.5">Subcategory *</label>
+          <select
+            {...register("category", { required: "Subcategory is required" })}
+            onChange={handleSubcategoryChange}
+            disabled={disabled}
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black"
+          >
+            <option value="">Select subcategory</option>
+            {subcategories.map((c) => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+          </select>
+          {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>}
+        </div>
+      )}
+
+      {showSubcategories && subcategories.length === 0 && mainCategory && (
+        <div className="mt-3">
+          <input
+            type="hidden"
+            {...register("category")}
+            value={mainCategory}
+          />
+          <p className="text-xs text-gray-500">No subcategories available. Product will be assigned to main category.</p>
+        </div>
+      )}
+
+      {errors.mainCategory && <p className="text-xs text-red-500 mt-1">{errors.mainCategory.message}</p>}
+    </div>
+  );
+};
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -21,9 +113,9 @@ const ProductForm = () => {
   });
 
   const { data: categories } = useQuery({
-    queryKey: ["categories-select"],
+    queryKey: ["categories-tree"],
     queryFn: async () => {
-      const { data } = await api.get("/categories?limit=100");
+      const { data } = await api.get("/categories/public");
       return data.data;
     },
   });
@@ -118,14 +210,13 @@ const ProductForm = () => {
         </div>
 
         {/* Category */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1.5">Category *</label>
-          <select {...register("category", { required: "Category is required" })} className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black">
-            <option value="">Select category</option>
-            {categories?.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-          </select>
-          {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>}
-        </div>
+        <CategorySelect
+          categories={categories}
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+        />
 
         {/* Description */}
         <div>

@@ -4,12 +4,23 @@ import { sendSuccess } from "../helpers/response.js";
 import { AppError } from "../middlewares/error.middleware.js";
 import { HTTP_STATUS } from "../constants/index.js";
 
+const buildCategoryTree = (categories, parentId = null) => {
+  return categories
+    .filter((cat) => String(cat.parent) === String(parentId))
+    .map((cat) => ({
+      ...cat.toObject(),
+      children: buildCategoryTree(categories, cat._id),
+    }))
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+};
+
 export const getPublicCategories = async (req, res, next) => {
   try {
     const categories = await Category.find({ isActive: true })
       .sort("sortOrder");
 
-    return sendSuccess(res, { data: categories });
+    const tree = buildCategoryTree(categories);
+    return sendSuccess(res, { data: tree });
   } catch (error) {
     next(error);
   }
@@ -64,14 +75,19 @@ export const getCategoryBySlug = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
   try {
-    const { name, description, image, sortOrder } = req.body;
+    const { name, description, image, sortOrder, parent } = req.body;
 
     if (!name) throw new AppError("Category name is required", HTTP_STATUS.BAD_REQUEST);
+
+    if (parent) {
+      const parentCat = await Category.findById(parent);
+      if (!parentCat) throw new AppError("Parent category not found", HTTP_STATUS.BAD_REQUEST);
+    }
 
     const existing = await Category.findOne({ name });
     if (existing) throw new AppError("Category already exists", HTTP_STATUS.CONFLICT);
 
-    const category = await Category.create({ name, description, image, sortOrder });
+    const category = await Category.create({ name, description, image, sortOrder, parent });
 
     return sendSuccess(res, {
       message: "Category created successfully",
@@ -93,7 +109,25 @@ export const updateCategory = async (req, res, next) => {
       if (existing) throw new AppError("Category name already exists", HTTP_STATUS.CONFLICT);
     }
 
-    const allowed = ["name", "description", "image", "sortOrder", "isActive"];
+    if (req.body.parent !== undefined) {
+      if (req.body.parent) {
+        if (req.body.parent === category._id.toString()) {
+          throw new AppError("Category cannot be its own parent", HTTP_STATUS.BAD_REQUEST);
+        }
+        const parentCat = await Category.findById(req.body.parent);
+        if (!parentCat) throw new AppError("Parent category not found", HTTP_STATUS.BAD_REQUEST);
+        // Check for circular reference
+        let current = parentCat;
+        while (current.parent) {
+          if (current.parent.toString() === category._id.toString()) {
+            throw new AppError("Circular reference detected", HTTP_STATUS.BAD_REQUEST);
+          }
+          current = await Category.findById(current.parent);
+        }
+      }
+    }
+
+    const allowed = ["name", "description", "image", "sortOrder", "isActive", "parent"];
     allowed.forEach((f) => { if (req.body[f] !== undefined) category[f] = req.body[f]; });
 
     await category.save();
@@ -108,6 +142,15 @@ export const deleteCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category) throw new AppError("Category not found", HTTP_STATUS.NOT_FOUND);
+
+    // Check for child categories
+    const childCount = await Category.countDocuments({ parent: category._id });
+    if (childCount > 0) {
+      throw new AppError(
+        `Cannot delete category with ${childCount} subcategory(ies). Remove or reassign subcategories first.`,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
 
     const productCount = await Product.countDocuments({ category: category._id });
     if (productCount > 0) {

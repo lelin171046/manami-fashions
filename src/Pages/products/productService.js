@@ -31,7 +31,7 @@ const productService = {
   },
 
   async getCategories() {
-    const { data } = await api.get("/categories");
+    const { data } = await api.get("/categories/public");
     return data.data;
   },
 };

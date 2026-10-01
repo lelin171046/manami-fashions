@@ -9,7 +9,7 @@ const navLinks = [
   { to: "/products", label: "Products" },
   { to: "/operations", label: "Operations" },
   { to: "/certifications", label: "Certifications" },
-  { to: "/gallery", label: "Highlights" },
+  { to: "/gallery", label: "CRS Activities" },
   { to: "/buyers", label: "Buyers" },
   { to: "/about", label: "About Us" },
 ];

@@ -6,6 +6,7 @@ export const createCategoryValidation = [
   body("description").optional().trim()
     .isLength({ max: 300 }).withMessage("Description cannot exceed 300 characters"),
   body("sortOrder").optional().isInt({ min: 0 }),
+  body("parent").optional().isMongoId().withMessage("Invalid parent category ID"),
 ];
 
 export const updateCategoryValidation = [
@@ -16,6 +17,7 @@ export const updateCategoryValidation = [
     .isLength({ max: 300 }).withMessage("Description cannot exceed 300 characters"),
   body("isActive").optional().isBoolean(),
   body("sortOrder").optional().isInt({ min: 0 }),
+  body("parent").optional().isMongoId().withMessage("Invalid parent category ID"),
 ];
 
 export const categoryIdValidation = [

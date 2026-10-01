@@ -5,7 +5,6 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "Category name is required"],
-      unique: true,
       trim: true,
       maxlength: [50, "Name cannot exceed 50 characters"],
     },
@@ -23,6 +22,11 @@ const categorySchema = new mongoose.Schema(
       url: { type: String, default: "" },
       publicId: { type: String, default: "" },
     },
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null,
+    },
     sortOrder: {
       type: Number,
       default: 0,
@@ -35,7 +39,8 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-categorySchema.index({ sortOrder: 1 });
+categorySchema.index({ parent: 1, sortOrder: 1 });
+categorySchema.index({ name: 1, parent: 1 }, { unique: true });
 
 categorySchema.pre("save", function (next) {
   if (this.isModified("name")) {
