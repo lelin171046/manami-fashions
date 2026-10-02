@@ -5,17 +5,17 @@ const WhyUs = () => {
     {
       id: "01",
       title: "100% Export Excellence",
-      desc: "Dedicated exclusively to the global market, meeting the stringent quality and safety standards of Europe, USA, and Australia.",
+      desc: "Dedicated exclusively to the global market, continuously exceeding quality and safety standards of Europe, USA, and Australia.",
     },
     {
       id: "02",
       title: "Operational Precision",
-      desc: "Our Industrial Engineering & Planning teams ensure lean manufacturing, optimized resource use, and on-time delivery.",
+      desc: "Our Industrial Engineering & Planning teams ensure lean manufacturing, optimized resource use and on-time delivery.",
     },
     {
       id: "03",
       title: "Sustainable Innovation",
-      desc: "Strategically conservative yet forward-thinking, we invest in long-term sustainability and ethical production cycles.",
+      desc: "we invest in long-term sustainability and ethical production cycles.",
     },
     {
       id: "04",
