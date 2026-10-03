@@ -7,10 +7,10 @@ import logo from "../assets/Logo.png";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/products", label: "Products" },
+  { to: "/buyers", label: "Buyers" },
   { to: "/operations", label: "Operations" },
   { to: "/certifications", label: "Certifications" },
-  { to: "/gallery", label: "CRS Activities" },
-  { to: "/buyers", label: "Buyers" },
+  { to: "/gallery", label: "CSR Activities" },
   { to: "/about", label: "About Us" },
 ];
 

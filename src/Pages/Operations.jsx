@@ -1,18 +1,35 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ArrowUpRight } from "lucide-react";
+import { Loader2, ArrowUpRight, CheckCircle2, Layers, Cpu, Gauge, Factory, Activity } from "lucide-react";
 
 import api from "../api/axios.js";
 
-const PRODUCTION_STATS = [
-  { label: "Daily Output", value: "25,000 pcs" },
-  { label: "Operators", value: "100+" },
-  { label: "Machines", value: "60+" },
-  { label: "QC Stages", value: "6 levels" },
-  { label: "Fabric Use", value: "95%" },
-  { label: "Defect Rate", value: "<0.5%" },
-];
+// Hardcoded fallback matching exact data from your images
+const HARDCODED_SECTIONS = {
+  "Sewing": {
+    stats: [
+      { label: "Number of Sewing Lines", value: "20" },
+      { label: "Number of Sewing Floor", value: "02" },
+      { label: "Sewing Machines Capacity", value: "700" },
+      { label: "Sewing Capacity/Day", value: "40,000 pcs / 7050 Hours" },
+      { label: "Sewing Efficiency", value: "65%" },
+    ],
+    captions: ["Sewing Floor — Self-Trimming & Self-Checking Stations"]
+  },
+  "Cutting / CAD": {
+    stats: [
+      { label: "Number of Cutting Tables", value: "05" },
+      { label: "Capacity/Day (Knit+Woven)", value: "45,000 pcs" },
+      { label: "CAD Marker Efficiency", value: "85%" },
+      { label: "Fabric Relaxation Capacity", value: "10 tons" },
+      { label: "Cut Panels Check", value: "100%" },
+      { label: "Printed/Embroidery Panel Check", value: "100%" },
+      { label: "Replace Cut Point", value: "5" },
+    ],
+    captions: ["Cutting Room Floor", "CAD Marker Planning", "Auto Plotter", "Panel Verification"]
+  }
+};
 
 /* Custom Embedded Sidebar Component */
 const LocalLineSidebar = ({ items, activeIndex, onItemClick }) => {
@@ -45,7 +62,7 @@ const LocalLineSidebar = ({ items, activeIndex, onItemClick }) => {
             {isActive && (
               <motion.div
                 layoutId="activeIndicator"
-                className="ml-auto w-1.5 h-1.5 rounded-full bg-white"
+                className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}
@@ -68,51 +85,38 @@ const Operations = () => {
   });
 
   const operations = useMemo(() => {
-    if (!ops) return [];
+    if (!ops || ops.length === 0) {
+      // Return hardcoded data array if database is empty
+      return Object.entries(HARDCODED_SECTIONS).map(([title, data], i) => ({
+        _id: `hardcoded-${i}`,
+        title,
+        step: i + 1,
+        description:
+          title === "Sewing"
+            ? "We are consistently striving to enhance and reinvent our operations. Therefore, to entail perfection in every step of growth, we consider technological & engineering advancement to be the essence in providing optimal solutions."
+            : "The integration of Auto CAD, plotter & auto pattern making & fabric relaxation technologies in our process of apparel manufacturing has brought innovation throughout.",
+        stats: data.stats,
+        captions: data.captions,
+        image: ""
+      }));
+    }
 
-    return ops.map((op, i) => ({
-      ...op,
-      image: op.image?.url || "",
-      step: op.step || i + 1,
-    }));
+    return ops.map((op, i) => {
+      const title = op.title || `Section ${i + 1}`;
+      const fallback = HARDCODED_SECTIONS[title] || HARDCODED_SECTIONS["Sewing"];
+
+      return {
+        ...op,
+        image: op.image?.url || "",
+        step: op.step || i + 1,
+        stats: op.stats || op.heroStats || fallback.stats,
+        captions: op.captions || fallback.captions
+      };
+    });
   }, [ops]);
 
   const activeOperation = operations[activeIndex];
   const sidebarItems = operations.map((op) => op.title);
-
-  const renderDetails = (details) => {
-    if (!details) return null;
-
-    if (Array.isArray(details)) {
-      return (
-        <ul className="space-y-3">
-          {details.map((item, index) => (
-            <li key={index} className="flex gap-3 text-sm text-neutral-400 leading-relaxed">
-              <span className="mt-[9px] w-1.5 h-1.5 rounded-full bg-white/60 shrink-0" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      );
-    }
-
-    if (typeof details === "object") {
-      return (
-        <div className="space-y-3">
-          {Object.entries(details).map(([key, value]) => (
-            <div key={key} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 min-w-[120px]">
-                {key}
-              </span>
-              <span className="text-sm text-neutral-200">{String(value)}</span>
-            </div>
-          ))}
-        </div>
-      );
-    }
-
-    return <p className="text-sm md:text-[15px] leading-[1.8] text-neutral-300">{details}</p>;
-  };
 
   return (
     <main className="min-h-screen bg-black text-white font-['Manrope',sans-serif]">
@@ -124,8 +128,8 @@ const Operations = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-neutral-400 mb-5">
-              How We Manufacture
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-red-500 mb-5">
+              Production Capabilities
             </p>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-[-0.055em] leading-[0.9] text-white">
@@ -133,7 +137,7 @@ const Operations = () => {
             </h1>
 
             <p className="mt-7 max-w-xl text-sm md:text-[15px] leading-[1.8] tracking-[-0.01em] text-neutral-400">
-              Complete garment production workflow — from sample development to final finishing — executed with precision at every step.
+              Departmental breakdown, machinery capacity, line efficiencies, and technology integration.
             </p>
           </motion.div>
         </div>
@@ -150,12 +154,12 @@ const Operations = () => {
         </div>
       ) : (
         <section className="px-6 md:px-12 lg:px-20 pb-32">
-          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-12 lg:gap-16 items-start">
+          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-12 lg:gap-16 items-start">
             {/* SIDEBAR */}
             <aside className="lg:sticky lg:top-28">
               <div className="mb-5">
                 <span className="text-[9px] uppercase tracking-[0.25em] font-semibold text-neutral-500">
-                  Production Process
+                  Sections
                 </span>
               </div>
 
@@ -166,7 +170,7 @@ const Operations = () => {
               />
             </aside>
 
-            {/* CONTENT CARD */}
+            {/* CONTENT DISPLAY */}
             <div className="min-w-0">
               <AnimatePresence mode="wait">
                 {activeOperation && (
@@ -177,100 +181,90 @@ const Operations = () => {
                     exit={{ opacity: 0, y: -15 }}
                     transition={{ duration: 0.45, ease: "easeOut" }}
                   >
-                    {/* HERO CONTAINER WITH BLURRED IMAGE & WHITE OVERLAY */}
-                    <div className="relative w-full h-[450px] md:h-[580px] lg:h-[650px] overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800/80 shadow-2xl">
-                      {activeOperation.image ? (
-                        <motion.img
-                          key={activeOperation.image}
-                          src={activeOperation.image}
-                          alt={activeOperation.title}
-                          initial={{ scale: 1.08, filter: "blur(12px)" }}
-                          animate={{ scale: 1.02, filter: "blur(6px)" }}
-                          transition={{ duration: 0.8, ease: "easeOut" }}
-                          className="w-full h-full object-cover opacity-60 transform scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-neutral-600">
-                          No image available
-                        </div>
-                      )}
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20 backdrop-blur-[2px]" />
-
-                      <div className="absolute inset-x-8 bottom-8 md:inset-x-12 md:bottom-12 flex flex-col justify-end z-10">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-white/70">
-                            Step {String(activeOperation.step).padStart(2, "0")}
-                          </span>
-                          <ArrowUpRight size={26} strokeWidth={1.2} className="text-white/80" />
-                        </div>
-
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-[-0.04em] text-white leading-none">
-                          {activeOperation.title}
-                        </h2>
+                    {/* SECTION TITLE & DESCRIPTION */}
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs uppercase tracking-[0.2em] text-red-500 font-semibold">
+                          Section {String(activeOperation.step).padStart(2, "0")}
+                        </span>
+                        <ArrowUpRight size={22} className="text-neutral-500" />
                       </div>
+                      <h2 className="text-3xl md:text-5xl font-light tracking-[-0.04em] text-white">
+                        {activeOperation.title}
+                      </h2>
+                      <p className="mt-4 text-sm md:text-base leading-[1.8] text-neutral-400 max-w-3xl">
+                        {activeOperation.description}
+                      </p>
                     </div>
 
-                    {/* DETAILS BELOW HERO */}
-                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 pt-10">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-neutral-500 mb-4">
-                          Manufacturing Process
-                        </p>
-                        <p className="text-base md:text-lg font-light leading-[1.8] tracking-[-0.015em] text-neutral-300 max-w-2xl">
-                          {activeOperation.description}
-                        </p>
+                    {/* MAIN IMAGE & SPECIFICATION GRID */}
+                    <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+                      
+                      {/* LEFT: IMAGE DISPLAY CARD */}
+                      <div className="space-y-3">
+                        <div className="relative w-full h-[380px] md:h-[480px] overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800 shadow-xl">
+                          {activeOperation.image ? (
+                            <img
+                              src={activeOperation.image}
+                              alt={activeOperation.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center text-neutral-600 bg-neutral-900/80 p-6 text-center">
+                              <Factory size={48} className="mb-3 text-neutral-700" />
+                              <p className="text-xs uppercase tracking-widest text-neutral-500">
+                                {activeOperation.title} Floor Photo
+                              </p>
+                            </div>
+                          )}
+
+                          {/* GRADIENT OVERLAY */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+                          {/* OVERLAID BADGE AT BOTTOM OF IMAGE */}
+                          <div className="absolute bottom-6 left-6 right-6">
+                            <span className="text-[11px] font-medium tracking-wide text-white/90 bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-white/10 inline-block">
+                              {activeOperation.title} Operational Unit
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* IMAGE CAPTION / FOOTER LABELS */}
+                        {activeOperation.captions && (
+                          <p className="text-xs text-neutral-500 font-mono pl-1">
+                            {activeOperation.captions.join(" — ")}
+                          </p>
+                        )}
                       </div>
 
-                      {activeOperation.details && (
-                        <div className="lg:border-l lg:border-neutral-800/80 lg:pl-10">
-                          <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-neutral-500 mb-5">
-                            Process Details
-                          </p>
-                          {renderDetails(activeOperation.details)}
-                        </div>
-                      )}
+                      {/* RIGHT: DYNAMIC SECTION STATS CARDS */}
+                      <div className="space-y-3">
+                        <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-2 pl-1">
+                          Key Operational Metrics
+                        </p>
+
+                        {activeOperation.stats?.map((stat, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, x: 15 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            className="bg-neutral-900/80 border border-neutral-800/90 rounded-xl p-4 flex items-center justify-between hover:border-red-500/40 transition-colors"
+                          >
+                            <span className="text-xs md:text-sm text-neutral-300 font-medium">
+                              {stat.label}
+                            </span>
+                            <span className="text-sm md:text-base font-semibold text-red-400 font-mono bg-red-950/30 px-3 py-1 rounded-md border border-red-900/30">
+                              {stat.value}
+                            </span>
+                          </motion.div>
+                        ))}
+                      </div>
+
                     </div>
                   </motion.article>
                 )}
               </AnimatePresence>
-
-              {/* STATS */}
-              <motion.section
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="mt-28 pt-16 border-t border-neutral-800/80"
-              >
-                <div className="mb-10">
-                  <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-neutral-500 mb-3">
-                    By The Numbers
-                  </p>
-                  <h2 className="text-3xl md:text-4xl font-light tracking-[-0.045em] text-white">
-                    Production <span className="font-semibold text-white">Capacity</span>
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-neutral-800 border border-neutral-800 rounded-xl overflow-hidden">
-                  {PRODUCTION_STATS.map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 15 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 }}
-                      className="bg-neutral-950 p-6 md:p-7 hover:bg-white hover:text-black transition-all duration-500 group"
-                    >
-                      <div className="text-2xl md:text-3xl font-light tracking-[-0.04em] mb-2 text-white group-hover:text-black transition-colors">
-                        {stat.value}
-                      </div>
-                      <div className="text-[9px] uppercase tracking-[0.18em] text-neutral-500 group-hover:text-neutral-700 transition-colors">
-                        {stat.label}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.section>
             </div>
           </div>
         </section>

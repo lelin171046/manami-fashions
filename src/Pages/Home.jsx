@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <div>
       <Hero3 />
-      <BrandSlider />
       <WhyUs />
+      <BrandSlider />
       <Hero />
   
       <Buyer />

@@ -48,7 +48,7 @@ const BrandSlider = () => {
               className="space-y-6 text-gray-500"
             >
               <p className="text-sm leading-relaxed max-w-sm">
-                As a responsible organization, we prioritize ethical business practices and sustainable growth. Our commitment to excellence is reflected in our 13+ international audit registries.
+                As a responsible organization, we prioritize ethical business practices and sustainable growth. Our commitment to excellence is reflected in our 16+ international audit registries.
               </p>
 
               <div className="pt-8 border-t border-gray-100">

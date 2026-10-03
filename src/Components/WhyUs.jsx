@@ -5,7 +5,7 @@ const WhyUs = () => {
     {
       id: "01",
       title: "100% Export Excellence",
-      desc: "Dedicated exclusively to the global market, continuously exceeding quality and safety standards of Europe, USA, and Australia.",
+      desc: "Dedicated exclusively to global markets, delivering consistently high standards of quality, safety, and compliance across Europe, USA and Australia.",
     },
     {
       id: "02",
@@ -15,7 +15,7 @@ const WhyUs = () => {
     {
       id: "03",
       title: "Sustainable Innovation",
-      desc: "we invest in long-term sustainability and ethical production cycles.",
+      desc: "We invest in long-term sustainability and ethical production cycles.",
     },
     {
       id: "04",
@@ -25,10 +25,10 @@ const WhyUs = () => {
   ];
 
   const stats = [
-    { value: "35,000", label: "Daily Pcs Capacity" },
+    { value: "40,000", label: "Daily Pcs Capacity" },
     { value: "1,600+", label: "Skilled Professionals" },
     { value: "700+", label: "Advanced Machinery" },
-    { value: "25+", label: "Production Lines" },
+    { value: "20+", label: "Production Lines" },
   ];
 
   return (
@@ -60,7 +60,7 @@ const WhyUs = () => {
                 <span className="text-[10px] uppercase tracking-widest text-gray-400">Founded</span>
               </div>
               <div>
-                <span className="block text-3xl font-bold tracking-tighter">13+</span>
+                <span className="block text-3xl font-bold tracking-tighter">16+</span>
                 <span className="text-[10px] uppercase tracking-widest text-gray-400">Certifications</span>
               </div>
             </div>
@@ -107,7 +107,7 @@ const WhyUs = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`flex flex-col p-8 border-r border-b border-black hover:bg-black hover:text-white transition-colors duration-500 group ${
                 index === stats.length - 1 ? "border-r-0" : ""
-              } ${index >= stats.length - 2 ? "border-b-0" : ""}`}
+              } ${index >= stats.length - 4? "border-b-0" : ""}`}
             >
               <span className="text-4xl md:text-5xl font-light tracking-tighter">{stat.value}</span>
               <span className="text-gray-500 text-[10px] uppercase tracking-widest mt-2 font-bold group-hover:text-gray-400 transition-colors">

@@ -54,8 +54,8 @@ const STORY_IMG =
 const EXCELLENCE_IMG =
   "https://res.cloudinary.com/dcdmktxtz/image/upload/v1776254791/WhatsApp_Image_2026-04-11_at_2.15.35_PM_mu5m8k.jpg";
 
-const LEADERSHIP_IMG =
-  "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583227/WhatsApp_Image_2026-08-24_at_8.52.56_PM_n7l9cq.jpg";
+// const LEADERSHIP_IMG =
+  // "https://res.cloudinary.com/dg04kyz8n/image/upload/v1787583227/WhatsApp_Image_2026-08-24_at_8.52.56_PM_n7l9cq.jpg"; 
 
 /* =========================================================
    ANIMATION VARIANTS
@@ -1222,108 +1222,91 @@ const AboutUs = () => {
       {/* =====================================================
           LEADERSHIP
       ===================================================== */}
+{/* =====================================================
+    LEADERSHIP
+===================================================== */}
 
-      <section className="bg-[#111] px-6 py-24 md:px-16 md:py-32 lg:px-20">
-        <div className="mx-auto grid max-w-screen-xl items-center gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-          <Reveal variant={slideLeft}>
-            <div className="relative mx-auto max-w-md">
-              <div className="absolute -bottom-5 -right-5 h-full w-full border border-white/10" />
+<section className="bg-[#111] px-6 py-24 text-white md:px-16 md:py-32 lg:px-20">
+  <div className="mx-auto max-w-screen-xl">
+    <div className="max-w-4xl">
+      
+      <Reveal>
+        <div className="mb-6 flex items-center gap-3">
+          <span className="h-px w-8 bg-white/30" />
 
-              <div className="relative overflow-hidden bg-neutral-900">
-                <img
-                  src={LEADERSHIP_IMG}
-                  alt="Mohsin Faisal, Managing Director of Manami Fashions Ltd."
-                  className="aspect-[4/5] w-full object-cover grayscale transition-all duration-1000 hover:grayscale-0"
-                  loading="lazy"
-                />
-
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-7 pb-7 pt-20">
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/50">
-                    Managing Director
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-
-          <div>
-            <Reveal>
-              <div className="mb-6 flex items-center gap-3">
-                <span className="h-px w-8 bg-white/30" />
-
-                <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35">
-                  Leadership
-                </span>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.05}>
-              <h2 className="text-4xl font-light uppercase leading-[0.94] tracking-[-0.055em] text-white md:text-5xl lg:text-6xl">
-                Guided By
-                <br />
-                <span className="font-semibold">Experience.</span>
-              </h2>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <p className="mt-8 max-w-xl text-sm leading-[1.85] text-white/45 md:text-[15px]">
-                Under the leadership of our Managing Director, Manami
-                Fashions continues to develop its manufacturing
-                capabilities with a focus on people, precision,
-                operational discipline and long-term customer
-                relationships.
-              </p>
-            </Reveal>
-
-            <div className="mt-10 space-y-5">
-              {[
-                "People first — investing in the strength of our workforce.",
-                "Precision matters — maintaining disciplined quality standards.",
-                "Long-term thinking — building relationships designed to last.",
-              ].map((point, index) => (
-                <motion.div
-                  key={point}
-                  initial={{
-                    opacity: 0,
-                    x: -15,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                  }}
-                  transition={{
-                    delay: 0.15 + index * 0.1,
-                    duration: 0.5,
-                    ease,
-                  }}
-                  className="flex items-start gap-4"
-                >
-                  <span className="mt-2.5 h-px w-6 shrink-0 bg-white/25" />
-
-                  <p className="text-sm leading-relaxed text-white/45">
-                    {point}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-
-            <Reveal delay={0.2}>
-              <div className="mt-10 border-t border-white/10 pt-6">
-                <p className="text-xl font-semibold tracking-[-0.02em] text-white">
-                  Mohsin Faisal
-                </p>
-
-                <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.28em] text-white/30">
-                  Managing Director
-                </p>
-              </div>
-            </Reveal>
-          </div>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35">
+            Leadership
+          </span>
         </div>
-      </section>
+      </Reveal>
+
+      <Reveal delay={0.05}>
+        <h2 className="text-4xl font-light uppercase leading-[0.94] tracking-[-0.055em] md:text-5xl lg:text-6xl">
+          Guided By
+          <br />
+          <span className="font-semibold">Experience.</span>
+        </h2>
+      </Reveal>
+
+      <Reveal delay={0.1}>
+        <p className="mt-8 max-w-2xl text-sm leading-[1.85] text-white/45 md:text-[15px]">
+          Under the leadership of our Managing Director, Manami Fashions
+          continues to develop its manufacturing capabilities with a focus
+          on people, precision, operational discipline and long-term
+          customer relationships.
+        </p>
+      </Reveal>
+
+      <div className="mt-10 grid gap-5 md:grid-cols-3">
+        {[
+          "People first — investing in the strength of our workforce.",
+          "Precision matters — maintaining disciplined quality standards.",
+          "Long-term thinking — building relationships designed to last.",
+        ].map((point, index) => (
+          <motion.div
+            key={point}
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              delay: 0.15 + index * 0.1,
+              duration: 0.5,
+              ease,
+            }}
+            className="border-t border-white/10 pt-5"
+          >
+            <span className="mb-4 block h-px w-6 bg-white/25" />
+
+            <p className="text-sm leading-relaxed text-white/45">
+              {point}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+
+      <Reveal delay={0.2}>
+        <div className="mt-12 border-t border-white/10 pt-6">
+          <p className="text-xl font-semibold tracking-[-0.02em] text-white">
+            Mohsin Faisal
+          </p>
+
+          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.28em] text-white/30">
+            Managing Director
+          </p>
+        </div>
+      </Reveal>
+
+    </div>
+  </div>
+</section>
 
       {/* =====================================================
           WHY MANAMI
