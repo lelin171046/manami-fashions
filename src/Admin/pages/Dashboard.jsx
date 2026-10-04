@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../api/axios.js";
 import StatsCard from "../components/ui/StatsCard.jsx";
-import { Package, FolderTree, Award, Users, Image, Cog, MessageSquare, Briefcase, Mail, Newspaper } from "lucide-react";
+import { Package, FolderTree, Award, Users, Image, Cog, MessageSquare, Briefcase, Mail, Newspaper, Male, Female, Child, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const fetchStats = async () => {
@@ -21,6 +21,10 @@ const Dashboard = () => {
 
   const cards = [
     { title: "Products", value: counts?.products, icon: Package, color: "bg-zinc-900", sub: `${counts?.activeProducts || 0} active`, link: "/admin/products" },
+    { title: "Men's Wear", value: counts?.mensProducts || 0, icon: Male, color: "bg-blue-600", sub: "Men's products", link: "/admin/products?audience=men" },
+    { title: "Women's Wear", value: counts?.womensProducts || 0, icon: Female, color: "bg-pink-600", sub: "Women's products", link: "/admin/products?audience=women" },
+    { title: "Kids' Wear", value: counts?.kidsProducts || 0, icon: Child, color: "bg-purple-600", sub: "Kids' products", link: "/admin/products?audience=kids" },
+    { title: "Featured", value: counts?.featuredProducts || 0, icon: Star, color: "bg-amber-500", sub: "Featured products", link: "/admin/products" },
     { title: "Categories", value: counts?.categories, icon: FolderTree, color: "bg-blue-600", link: "/admin/categories" },
     { title: "Buyers", value: counts?.buyers, icon: Users, color: "bg-emerald-600", link: "/admin/buyers" },
     { title: "Gallery", value: counts?.gallery, icon: Image, color: "bg-purple-600", link: "/admin/gallery" },
@@ -76,6 +80,11 @@ const Dashboard = () => {
                     <p className="text-sm font-medium text-gray-700 truncate">{p.name}</p>
                     <p className="text-xs text-gray-400">{p.category?.name || "Uncategorized"}</p>
                   </div>
+                  {p.audience && (
+                    <span className="text-[10px] px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full font-medium uppercase">
+                      {p.audience === 'men' ? "Men" : p.audience === 'women' ? "Women" : "Kids"}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

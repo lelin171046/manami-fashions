@@ -112,9 +112,24 @@ export const deleteAdmin = async (req, res, next) => {
 
 export const getDashboardStats = async (req, res, next) => {
   try {
+    const Product = (await import("../models/Product.model.js")).default;
+    const Category = (await import("../models/Category.model.js")).default;
+    const Certification = (await import("../models/Certification.model.js")).default;
+    const Buyer = (await import("../models/Buyer.model.js")).default;
+    const Gallery = (await import("../models/Gallery.model.js")).default;
+    const Operations = (await import("../models/Operations.model.js")).default;
+    const ContactMessage = (await import("../models/ContactMessage.model.js")).default;
+    const JobApplication = (await import("../models/JobApplication.model.js")).default;
+    const Newsletter = (await import("../models/Newsletter.model.js")).default;
+    const Blog = (await import("../models/Blog.model.js")).default;
+
     const [
       totalProducts,
       activeProducts,
+      mensProducts,
+      womensProducts,
+      kidsProducts,
+      featuredProducts,
       totalCategories,
       totalCertifications,
       totalBuyers,
@@ -129,21 +144,25 @@ export const getDashboardStats = async (req, res, next) => {
       totalAdmins,
       totalBlogs,
     ] = await Promise.all([
-      import("../models/Product.model.js").then((m) => m.default.countDocuments()),
-      import("../models/Product.model.js").then((m) => m.default.countDocuments({ status: "active" })),
-      import("../models/Category.model.js").then((m) => m.default.countDocuments()),
-      import("../models/Certification.model.js").then((m) => m.default.countDocuments()),
-      import("../models/Buyer.model.js").then((m) => m.default.countDocuments()),
-      import("../models/Gallery.model.js").then((m) => m.default.countDocuments()),
-      import("../models/Operations.model.js").then((m) => m.default.countDocuments()),
-      import("../models/ContactMessage.model.js").then((m) => m.default.countDocuments()),
-      import("../models/ContactMessage.model.js").then((m) => m.default.countDocuments({ status: "pending" })),
-      import("../models/ContactMessage.model.js").then((m) => m.default.countDocuments({ isRead: false })),
-      import("../models/JobApplication.model.js").then((m) => m.default.countDocuments()),
-      import("../models/JobApplication.model.js").then((m) => m.default.countDocuments({ status: "pending" })),
-      import("../models/Newsletter.model.js").then((m) => m.default.countDocuments({ isSubscribed: true })),
+      Product.countDocuments(),
+      Product.countDocuments({ status: "active" }),
+      Product.countDocuments({ audience: "men" }),
+      Product.countDocuments({ audience: "women" }),
+      Product.countDocuments({ audience: "kids" }),
+      Product.countDocuments({ featured: true }),
+      Category.countDocuments(),
+      Certification.countDocuments(),
+      Buyer.countDocuments(),
+      Gallery.countDocuments(),
+      Operations.countDocuments(),
+      ContactMessage.countDocuments(),
+      ContactMessage.countDocuments({ status: "pending" }),
+      ContactMessage.countDocuments({ isRead: false }),
+      JobApplication.countDocuments(),
+      JobApplication.countDocuments({ status: "pending" }),
+      Newsletter.countDocuments({ isSubscribed: true }),
       Admin.countDocuments(),
-      import("../models/Blog.model.js").then((m) => m.default.countDocuments()),
+      Blog.countDocuments(),
     ]);
 
     const [
@@ -151,9 +170,9 @@ export const getDashboardStats = async (req, res, next) => {
       recentApplications,
       recentProducts,
     ] = await Promise.all([
-      import("../models/ContactMessage.model.js").then((m) => m.default.find().sort("-createdAt").limit(5)),
-      import("../models/JobApplication.model.js").then((m) => m.default.find().sort("-createdAt").limit(5)),
-      import("../models/Product.model.js").then((m) => m.default.find().sort("-createdAt").limit(5).populate("category")),
+      ContactMessage.find().sort("-createdAt").limit(5),
+      JobApplication.find().sort("-createdAt").limit(5),
+      Product.find().sort("-createdAt").limit(5).populate("category"),
     ]);
 
     return sendSuccess(res, {
@@ -161,6 +180,10 @@ export const getDashboardStats = async (req, res, next) => {
         counts: {
           products: totalProducts,
           activeProducts,
+          mensProducts,
+          womensProducts,
+          kidsProducts,
+          featuredProducts,
           categories: totalCategories,
           certifications: totalCertifications,
           buyers: totalBuyers,

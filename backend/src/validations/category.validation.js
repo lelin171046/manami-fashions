@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 export const createCategoryValidation = [
   body("name").trim().notEmpty().withMessage("Category name is required")
@@ -7,6 +7,7 @@ export const createCategoryValidation = [
     .isLength({ max: 300 }).withMessage("Description cannot exceed 300 characters"),
   body("sortOrder").optional().isInt({ min: 0 }),
   body("parent").optional().isMongoId().withMessage("Invalid parent category ID"),
+  body("audience").optional().isIn(["men", "women", "kids", ""]).withMessage("Audience must be men, women, kids, or empty"),
 ];
 
 export const updateCategoryValidation = [
@@ -18,8 +19,13 @@ export const updateCategoryValidation = [
   body("isActive").optional().isBoolean(),
   body("sortOrder").optional().isInt({ min: 0 }),
   body("parent").optional().isMongoId().withMessage("Invalid parent category ID"),
+  body("audience").optional().isIn(["men", "women", "kids", ""]).withMessage("Audience must be men, women, kids, or empty"),
 ];
 
 export const categoryIdValidation = [
   param("id").isMongoId().withMessage("Invalid category ID"),
+];
+
+export const publicCategoriesValidation = [
+  query("audience").optional().isIn(["men", "women", "kids"]).withMessage("Audience must be men, women, or kids"),
 ];

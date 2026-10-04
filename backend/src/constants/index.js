@@ -59,6 +59,12 @@ export const PRODUCT_CATEGORIES = {
   ACTIVE_INNERWEAR: "active_innerwear",
 };
 
+export const PRODUCT_AUDIENCE = {
+  MEN: "men",
+  WOMEN: "women",
+  KIDS: "kids",
+};
+
 export const PAGINATION = {
   DEFAULT_PAGE: 1,
   DEFAULT_LIMIT: 12,

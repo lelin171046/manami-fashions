@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PRODUCT_AUDIENCE } from "../constants/index.js";
 
 const categorySchema = new mongoose.Schema(
   {
@@ -27,6 +28,11 @@ const categorySchema = new mongoose.Schema(
       ref: "Category",
       default: null,
     },
+    audience: {
+      type: String,
+      enum: [...Object.values(PRODUCT_AUDIENCE), ""],
+      default: "",
+    },
     sortOrder: {
       type: Number,
       default: 0,
@@ -41,6 +47,7 @@ const categorySchema = new mongoose.Schema(
 
 categorySchema.index({ parent: 1, sortOrder: 1 });
 categorySchema.index({ name: 1, parent: 1 }, { unique: true });
+categorySchema.index({ audience: 1, isActive: 1, sortOrder: 1 });
 
 categorySchema.pre("save", function (next) {
   if (this.isModified("name")) {

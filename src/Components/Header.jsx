@@ -10,7 +10,7 @@ const navLinks = [
   { to: "/buyers", label: "Buyers" },
   { to: "/operations", label: "Operations" },
   { to: "/certifications", label: "Certifications" },
-  { to: "/gallery", label: "CSR Activities" },
+  { to: "/gallery", label: "CSR" },
   { to: "/about", label: "About Us" },
 ];
 

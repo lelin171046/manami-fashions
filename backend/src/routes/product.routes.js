@@ -18,11 +18,12 @@ import {
   updateProductValidation,
   productIdValidation,
   productSlugValidation,
+  publicProductsValidation,
 } from "../validations/product.validation.js";
 
 const router = Router();
 
-router.get("/public", getPublicProducts);
+router.get("/public", publicProductsValidation, validate, getPublicProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/slug/:slug", productSlugValidation, validate, getProductBySlug);
 

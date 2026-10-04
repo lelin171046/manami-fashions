@@ -13,7 +13,8 @@ export const getProducts = async (req, res, next) => {
       category,
       status,
       featured,
-      fabric,
+      audience,
+      productType,
     } = req.query;
 
     const query = {};
@@ -24,7 +25,8 @@ export const getProducts = async (req, res, next) => {
     if (category) query.category = category;
     if (status) query.status = status;
     if (featured !== undefined) query.featured = featured === "true";
-    if (fabric) query.fabric = { $regex: fabric, $options: "i" };
+    if (audience) query.audience = audience;
+    if (productType) query.productType = { $regex: productType, $options: "i" };
 
     const pageNum = Math.max(1, parseInt(page));
     const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
@@ -60,28 +62,33 @@ export const getPublicProducts = async (req, res, next) => {
     const {
       page = 1,
       limit = 12,
-      sort = "-createdAt",
+      sort = "sortOrder",
       search,
       category,
-      fabric,
+      audience,
     } = req.query;
 
     const query = { status: "active" };
+
+    if (audience) {
+      query.audience = audience;
+    }
 
     if (search) {
       query.$text = { $search: search };
     }
     if (category) query.category = category;
-    if (fabric) query.fabric = { $regex: fabric, $options: "i" };
 
     const pageNum = Math.max(1, parseInt(page));
     const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
     const skip = (pageNum - 1) * limitNum;
 
+    const sortObj = sort === "sortOrder" ? { sortOrder: 1, createdAt: -1 } : { [sort.replace("-", "")]: sort.startsWith("-") ? -1 : 1 };
+
     const [products, total] = await Promise.all([
       Product.find(query)
         .populate("category", "name slug")
-        .sort(sort)
+        .sort(sortObj)
         .skip(skip)
         .limit(limitNum),
       Product.countDocuments(query),
@@ -105,10 +112,13 @@ export const getPublicProducts = async (req, res, next) => {
 
 export const getFeaturedProducts = async (req, res, next) => {
   try {
-    const { limit = 6 } = req.query;
-    const products = await Product.find({ status: "active", featured: true })
+    const { limit = 6, audience } = req.query;
+    const query = { status: "active", featured: true };
+    if (audience) query.audience = audience;
+
+    const products = await Product.find(query)
       .populate("category", "name slug")
-      .sort("-createdAt")
+      .sort({ sortOrder: 1, createdAt: -1 })
       .limit(Math.min(20, parseInt(limit)));
 
     return sendSuccess(res, { data: products });
@@ -149,29 +159,63 @@ export const getProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
-    const { title, category, description, fabric, gsm, sizes, colors, moq, images, featured, status } = req.body;
+    const {
+      name,
+      audience,
+      category,
+      productType,
+      shortDescription,
+      description,
+      features,
+      materials,
+      fabric,
+      composition,
+      weight,
+      availableColors,
+      availableSizes,
+      images,
+      manufacturingCapabilities,
+      certifications,
+      minimumOrderQuantity,
+      productionCapacity,
+      leadTime,
+      featured,
+      status,
+      sortOrder,
+    } = req.body;
 
-    if (!title || !category) {
-      throw new AppError("Title and category are required", HTTP_STATUS.BAD_REQUEST);
+    if (!name || !audience || !category) {
+      throw new AppError("Name, audience, and category are required", HTTP_STATUS.BAD_REQUEST);
     }
 
-    const existing = await Product.findOne({ title });
+    const existing = await Product.findOne({ name });
     if (existing) {
-      throw new AppError("Product with this title already exists", HTTP_STATUS.CONFLICT);
+      throw new AppError("Product with this name already exists", HTTP_STATUS.CONFLICT);
     }
 
     const product = await Product.create({
-      title,
+      name,
+      audience,
       category,
+      productType,
+      shortDescription,
       description,
+      features,
+      materials,
       fabric,
-      gsm,
-      sizes,
-      colors,
-      moq,
+      composition,
+      weight,
+      availableColors,
+      availableSizes,
       images,
+      manufacturingCapabilities,
+      certifications,
+      minimumOrderQuantity,
+      productionCapacity,
+      leadTime,
       featured,
       status,
+      sortOrder,
     });
 
     await product.populate("category", "name slug");
@@ -193,14 +237,38 @@ export const updateProduct = async (req, res, next) => {
       throw new AppError("Product not found", HTTP_STATUS.NOT_FOUND);
     }
 
-    if (req.body.title && req.body.title !== product.title) {
-      const existing = await Product.findOne({ title: req.body.title });
+    if (req.body.name && req.body.name !== product.name) {
+      const existing = await Product.findOne({ name: req.body.name });
       if (existing) {
-        throw new AppError("Product title already exists", HTTP_STATUS.CONFLICT);
+        throw new AppError("Product name already exists", HTTP_STATUS.CONFLICT);
       }
     }
 
-    const allowedFields = ["title", "category", "description", "fabric", "gsm", "sizes", "colors", "moq", "images", "featured", "status"];
+    const allowedFields = [
+      "name",
+      "audience",
+      "category",
+      "productType",
+      "shortDescription",
+      "description",
+      "features",
+      "materials",
+      "fabric",
+      "composition",
+      "weight",
+      "availableColors",
+      "availableSizes",
+      "images",
+      "manufacturingCapabilities",
+      "certifications",
+      "minimumOrderQuantity",
+      "productionCapacity",
+      "leadTime",
+      "featured",
+      "status",
+      "sortOrder",
+    ];
+
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         product[field] = req.body[field];

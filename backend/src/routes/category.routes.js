@@ -14,11 +14,12 @@ import {
   createCategoryValidation,
   updateCategoryValidation,
   categoryIdValidation,
+  publicCategoriesValidation,
 } from "../validations/category.validation.js";
 
 const router = Router();
 
-router.get("/public", getPublicCategories);
+router.get("/public", publicCategoriesValidation, validate, getPublicCategories);
 router.get("/slug/:slug", getCategoryBySlug);
 
 router.use(protect);

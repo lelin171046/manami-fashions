@@ -16,8 +16,11 @@ const buildCategoryTree = (categories, parentId = null) => {
 
 export const getPublicCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find({ isActive: true })
-      .sort("sortOrder");
+    const { audience } = req.query;
+    const query = { isActive: true };
+    if (audience) query.audience = { $in: [audience, ""] };
+
+    const categories = await Category.find(query).sort("sortOrder");
 
     const tree = buildCategoryTree(categories);
     return sendSuccess(res, { data: tree });
@@ -28,7 +31,7 @@ export const getPublicCategories = async (req, res, next) => {
 
 export const getCategories = async (req, res, next) => {
   try {
-    const { page = 1, limit = 50, sort = "sortOrder", search } = req.query;
+    const { page = 1, limit = 50, sort = "sortOrder", search, audience } = req.query;
     const pageNum = Math.max(1, parseInt(page));
     const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
 
@@ -36,6 +39,7 @@ export const getCategories = async (req, res, next) => {
     if (search) {
       query.name = { $regex: search, $options: "i" };
     }
+    if (audience) query.audience = { $in: [audience, ""] };
 
     const [categories, total] = await Promise.all([
       Category.find(query).sort(sort).skip((pageNum - 1) * limitNum).limit(limitNum),
@@ -75,7 +79,7 @@ export const getCategoryBySlug = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
   try {
-    const { name, description, image, sortOrder, parent } = req.body;
+    const { name, description, image, sortOrder, parent, audience } = req.body;
 
     if (!name) throw new AppError("Category name is required", HTTP_STATUS.BAD_REQUEST);
 
@@ -87,7 +91,7 @@ export const createCategory = async (req, res, next) => {
     const existing = await Category.findOne({ name });
     if (existing) throw new AppError("Category already exists", HTTP_STATUS.CONFLICT);
 
-    const category = await Category.create({ name, description, image, sortOrder, parent });
+    const category = await Category.create({ name, description, image, sortOrder, parent, audience });
 
     return sendSuccess(res, {
       message: "Category created successfully",
@@ -127,7 +131,7 @@ export const updateCategory = async (req, res, next) => {
       }
     }
 
-    const allowed = ["name", "description", "image", "sortOrder", "isActive", "parent"];
+    const allowed = ["name", "description", "image", "sortOrder", "isActive", "parent", "audience"];
     allowed.forEach((f) => { if (req.body[f] !== undefined) category[f] = req.body[f]; });
 
     await category.save();

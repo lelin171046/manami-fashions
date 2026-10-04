@@ -1,219 +1,129 @@
 import { motion } from "framer-motion";
 import InfiniteSpiral from "../Components/InfiniteSpiral.jsx";
 
+const images = [
+  {
+    id: "puma",
+    name: "PUMA",
+    src: "https://upload.wikimedia.org/wikipedia/en/d/da/Puma_complete_logo.svg",
+    alt: "PUMA buyer logo",
+    category: "Sportswear",
+  },
+  {
+    id: "kiabi",
+    name: "Kiabi",
+    src: "https://images.ctfassets.net/0y25wr71xvc0/lfsNGs720v8hlefs8K1ZL/cab18fe8b2bc9ecdb477798950bc5431/Kiabi26.png?fm=webp&fit=scale&r=0&q=75&w=1920",
+    alt: "Kiabi buyer logo",
+    category: "Value fashion retail",
+  },
+  {
+    id: "dunnes",
+    name: "Dunnes Stores",
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Logo_of_Dunnes_Stores.svg/1280px-Logo_of_Dunnes_Stores.svg.png",
+    alt: "Dunnes Stores buyer logo",
+    category: "Fashion and home retail",
+  },
+  {
+    id: "matalan",
+    name: "Matalan",
+    src: "https://www.eclipsedigitalmedia.co.uk/wp-content/uploads/2017/02/eclipse-digital-media-digital-signage-solutions-matalan-led-wall-logo.png",
+    alt: "Matalan buyer logo",
+    category: "Clothing retailer",
+  },
+  {
+    id: "walmart",
+    name: "Walmart",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXqR1i07MgglXVrv-cWoR9TEEG2mOWJY8vJElGH0vVH5THOELNydaZ6r4j&s=10",
+    alt: "Walmart buyer logo",
+    category: "Global retail",
+  },
+  {
+    id: "best-less",
+    name: "Best & Less",
+    src: "https://www.cliffordgardens.com.au/wp-content/uploads/2023/06/BestAndLess_Logo.webp",
+    alt: "Best and Less buyer logo",
+    category: "Family apparel retail",
+  },
+  {
+    id: "target",
+    name: "Target",
+    src: "https://www.studenterlauget.dk/wp-content/uploads/2024/07/Lidl-Logo.jpg",
+    alt: "Target buyer logo",
+    category: "Retail corporation",
+  },
+  {
+    id: "lidl",
+    name: "Lidl",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRx3nvd3mnH9nNzk1-QOMDzmu7YUnaUKVd1HNb8PdM4HdQtxwMgZ4VS_ng&s=10",
+    alt: "Lidl buyer logo",
+    category: "Global discount supermarket chain",
+  },
+  {
+    id: "aldi",
+    name: "Aldi",
+    src: "https://www.theindustry.fashion/wp-content/uploads/2021/09/warehouse.jpg",
+    alt: "Aldi buyer logo",
+    category: "Global discount supermarket chain",
+  },
+];
+
 const Buyers = () => {
-  const buyers = [
-    {
-      name: "PUMA",
-      logo:
-        "https://upload.wikimedia.org/wikipedia/en/d/da/Puma_complete_logo.svg",
-    },
-    {
-      name: "Best & Less",
-      logo:
-        "https://www.cliffordgardens.com.au/wp-content/uploads/2023/06/BestAndLess_Logo.webp",
-    },
-    {
-      name: "Walmart",
-      logo:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Walmart_logo_%282008%2C_stacked%29.svg/1920px-Walmart_logo_%282008%2C_stacked%29.svg.png",
-    },
-    {
-      name: "Matalan",
-      logo:
-        "https://www.eclipsedigitalmedia.co.uk/wp-content/uploads/2017/02/eclipse-digital-media-digital-signage-solutions-matalan-led-wall-logo.png",
-    },
-    {
-      name: "Kiabi",
-      logo:
-        "https://cdn.freebiesupply.com/logos/large/2x/kiabi-1-logo-png-transparent.png",
-    },
-    {
-      name: "Dunnes Stores",
-      logo:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Logo_of_Dunnes_Stores.svg/1280px-Logo_of_Dunnes_Stores.svg.png",
-    },
-    {
-      name: "Woolworths",
-      logo:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGpXrRXlQE7KEg2WLVOWCTnzjlmzQbhQYDwA&s",
-    },
-    {
-      name: "The Warehouse",
-      logo:
-        "https://www.theindustry.fashion/wp-content/uploads/2021/09/warehouse.jpg",
-    },
-    // add the rest of your buyers...
-  
-
-    // add the rest of your buyers...
-  ];
-
-  const spiralItems = buyers.map((buyer) => ({
-    src: buyer.logo,
-    alt: buyer.name,
-    label: buyer.name,
-  }));
-
   return (
-    <section className="bg-white py-24 overflow-hidden border-t border-gray-100">
-
-      {/* HEADER */}
-      <div className="max-w-screen-xl mx-auto px-6 md:px-20 mb-12">
-
+    <section className="relative w-full py-16 bg-black text-white overflow-hidden">
+      {/* HEADER SECTION FOR BUYERS */}
+      <div className="max-w-4xl mx-auto text-center px-6 mb-8 relative z-10">
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="
-            text-xs
-            uppercase
-            tracking-[0.3em]
-            text-gray-400
-            mb-4
-          "
+          transition={{ duration: 0.5 }}
+          className="text-xs font-semibold uppercase tracking-[0.3em] text-red-500 mb-3"
         >
-          Global Partners
+          Global Partnerships
         </motion.p>
 
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="
-            text-4xl
-            md:text-6xl
-            font-extralight
-            tracking-tight
-            text-gray-900
-          "
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-3xl md:text-5xl font-light tracking-tight text-white mb-4"
         >
-          Trusted by{" "}
-          <span className="text-gray-400">
-            Global Leaders.
-          </span>
+          Trusted by the World’s <span className="font-semibold text-white">Leading Brands.</span>
         </motion.h2>
 
-        <p className="
-          mt-6
-          max-w-2xl
-          text-sm
-          md:text-base
-          font-light
-          leading-relaxed
-          text-gray-500
-        ">
-          Building long-term manufacturing partnerships
-          with internationally recognized brands across
-          global markets.
-        </p>
-
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-sm md:text-base text-neutral-400 max-w-2xl mx-auto leading-relaxed"
+        >
+          From high-performance sportswear to volume fashion, we engineer precision apparel for global market leaders with ethical compliance and unmatched speed-to-market.
+        </motion.p>
       </div>
 
-      {/* SPIRAL */}
-      <div className="
-        relative
-        h-[600px]
-        md:h-[700px]
-        lg:h-[760px]
-        overflow-hidden
-      ">
-
+      {/* INFINITE SPIRAL CANVAS */}
+      <div className="relative h-[650px] w-full">
         <InfiniteSpiral
-          items={spiralItems}
-
-          speed={0.32}
-          direction="up"
+          items={images}
           animationMode="all"
-
-          radius={230}
+          speed={0.35}
+          radius={510}
+          cardWidth={160}
+          cardHeight={100}
+          verticalSpacing={110}
+          perspective={1000}
+          cardRadius={10}
+          centerScale={1}
+          edgeBlur={3}
           cardsPerTurn={8}
-          verticalSpacing={105}
-
+          direction="clockwise"
           rotation={0}
           cardTilt={0}
-
-          cardWidth={190}
-          cardHeight={115}
-
-          cardRadius={4}
-
-          perspective={1200}
-
-          centerScale={1.15}
-
-          edgeFade={0.25}
-          edgeBlur={0}
-
-          pauseOnHover
-
+          edgeFade={0.3}
+          pauseOnHover={false}
           imageFit="contain"
           grayscale={0}
-
-          className="w-full h-full"
         />
-
       </div>
-
-      {/* BOTTOM INFORMATION */}
-      <div className="
-        max-w-screen-xl
-        mx-auto
-        px-6
-        md:px-20
-        pt-12
-      ">
-
-        <div className="
-          flex
-          flex-col
-          md:flex-row
-          md:items-end
-          md:justify-between
-          gap-6
-          border-t
-          border-gray-100
-          pt-8
-        ">
-
-          <div>
-            <p className="
-              text-xs
-              uppercase
-              tracking-[0.25em]
-              text-gray-400
-            ">
-              Manufacturing Partnerships
-            </p>
-
-            <h3 className="
-              mt-3
-              text-2xl
-              md:text-3xl
-              font-extralight
-              tracking-tight
-              text-gray-900
-            ">
-              Global Reach.
-              <span className="text-gray-400">
-                {" "}Consistent Quality.
-              </span>
-            </h3>
-          </div>
-
-          <div className="
-            text-xs
-            uppercase
-            tracking-[0.2em]
-            text-gray-400
-          ">
-            100% Export Focused
-          </div>
-
-        </div>
-
-      </div>
-
     </section>
   );
 };

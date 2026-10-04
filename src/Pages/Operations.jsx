@@ -15,7 +15,7 @@ const HARDCODED_SECTIONS = {
       { label: "Sewing Capacity/Day", value: "40,000 pcs / 7050 Hours" },
       { label: "Sewing Efficiency", value: "65%" },
     ],
-    captions: ["Sewing Floor — Self-Trimming & Self-Checking Stations"]
+
   },
   "Cutting / CAD": {
     stats: [

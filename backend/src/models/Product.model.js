@@ -1,56 +1,85 @@
 import mongoose from "mongoose";
-import { PRODUCT_CATEGORIES, PRODUCT_STATUS } from "../constants/index.js";
+import { PRODUCT_STATUS, PRODUCT_AUDIENCE } from "../constants/index.js";
 
 const productSchema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
-      required: [true, "Product title is required"],
+      required: [true, "Product name is required"],
       trim: true,
-      maxlength: [150, "Title cannot exceed 150 characters"],
+      maxlength: [150, "Name cannot exceed 150 characters"],
     },
     slug: {
       type: String,
       unique: true,
       lowercase: true,
     },
+    audience: {
+      type: String,
+      enum: Object.values(PRODUCT_AUDIENCE),
+      required: [true, "Audience is required"],
+      index: true,
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: [true, "Category is required"],
     },
+    productType: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    shortDescription: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: [500, "Short description cannot exceed 500 characters"],
+    },
     description: {
       type: String,
       default: "",
-      maxlength: [2000, "Description cannot exceed 2000 characters"],
+      maxlength: [5000, "Description cannot exceed 5000 characters"],
     },
-    fabric: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-    gsm: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-    sizes: [
+    features: [
       {
         type: String,
         trim: true,
       },
     ],
-    colors: [
+    materials: [
       {
-        name: { type: String, trim: true },
-        hex: { type: String, trim: true },
+        type: String,
+        trim: true,
       },
     ],
-    moq: {
+    fabric: {
       type: String,
       trim: true,
       default: "",
     },
+    composition: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    weight: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    availableColors: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    availableSizes: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     images: [
       {
         url: { type: String, required: true },
@@ -58,6 +87,33 @@ const productSchema = new mongoose.Schema(
         alt: { type: String, default: "" },
       },
     ],
+    manufacturingCapabilities: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    certifications: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    minimumOrderQuantity: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    productionCapacity: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    leadTime: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     featured: {
       type: Boolean,
       default: false,
@@ -66,22 +122,30 @@ const productSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(PRODUCT_STATUS),
       default: PRODUCT_STATUS.ACTIVE,
+      index: true,
+    },
+    sortOrder: {
+      type: Number,
+      default: 0,
+      index: true,
     },
   },
   { timestamps: true }
 );
 
-productSchema.index({ title: "text", description: "text" });
+productSchema.index({ name: "text", description: "text", shortDescription: "text" });
 productSchema.index({ category: 1 });
-productSchema.index({ status: 1 });
 productSchema.index({ featured: 1 });
+productSchema.index({ audience: 1, status: 1, sortOrder: 1 });
+productSchema.index({ productType: 1 });
 
 productSchema.pre("save", function (next) {
-  if (this.isModified("title")) {
-    this.slug = this.title
+  if (this.isModified("name") && !this.slug) {
+    const baseSlug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "") + `-${Date.now()}`;
+      .replace(/(^-|-$)/g, "");
+    this.slug = `${baseSlug}-${Date.now()}`;
   }
   next();
 });
