@@ -120,7 +120,7 @@ const Products = () => {
   }, [selectedAudience]);
 
   return (
-    <main className="min-h-screen bg-black text-white font-['Manrope',sans-serif]">
+    <main className="min-h-screen bg-none text-white font-['Manrope',sans-serif]">
       {/* HERO SECTION */}
       <section className="pt-32 pb-16 px-6 md:px-12 lg:px-20 max-w-[1600px] mx-auto">
         <motion.div
@@ -132,7 +132,7 @@ const Products = () => {
             Our Product Range
           </p>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-white mb-6">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-black mb-6">
             Built for Every <span className="font-semibold">Wardrobe.</span>
           </h1>
 

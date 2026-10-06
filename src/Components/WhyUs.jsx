@@ -27,8 +27,9 @@ const WhyUs = () => {
   const stats = [
     { value: "40,000", label: "Daily Pcs Capacity" },
     { value: "1,600+", label: "Skilled Professionals" },
-    { value: "700+", label: "Advanced Machinery" },
-    { value: "20+", label: "Production Lines" },
+    { value: "100%", label: "Compliance" },
+    { value: "ISO 14001", label: "ENVIRONMENTAL MANAGEMENT" },
+ 
   ];
 
   return (

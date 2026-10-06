@@ -69,7 +69,7 @@ const images = [
 
 const Buyers = () => {
   return (
-    <section className="relative w-full py-16 bg-black text-white overflow-hidden">
+    <section className="relative w-full py-16 bg-none text-white overflow-hidden">
       {/* HEADER SECTION FOR BUYERS */}
       <div className="max-w-4xl mx-auto text-center px-6 mb-8 relative z-10">
         <motion.p
@@ -85,9 +85,9 @@ const Buyers = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-3xl md:text-5xl font-light tracking-tight text-white mb-4"
+          className="text-3xl md:text-5xl font-light tracking-tight text-black mb-4"
         >
-          Trusted by the World’s <span className="font-semibold text-white">Leading Brands.</span>
+          Trusted by the World’s <span className="font-semibold text-black">Leading Brands.</span>
         </motion.h2>
 
         <motion.p
