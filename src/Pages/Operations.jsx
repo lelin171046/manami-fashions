@@ -45,7 +45,7 @@ const LocalLineSidebar = ({ items, activeIndex, onItemClick }) => {
           >
             <span
               className={`text-[11px] font-mono transition-colors ${
-                isActive ? "text-white font-semibold" : "text-neutral-500 group-hover:text-neutral-300"
+                isActive ? "text-black font-semibold" : "text-neutral-500 group-hover:text-neutral-300"
               }`}
             >
               {String(index + 1).padStart(2, "0")}
@@ -53,7 +53,7 @@ const LocalLineSidebar = ({ items, activeIndex, onItemClick }) => {
             <span
               className={`text-sm tracking-wide transition-all ${
                 isActive
-                  ? "text-white font-medium translate-x-1"
+                  ? "text-black font-medium translate-x-1"
                   : "text-neutral-400 group-hover:text-neutral-200"
               }`}
             >
@@ -119,7 +119,7 @@ const Operations = () => {
   const sidebarItems = operations.map((op) => op.title);
 
   return (
-    <main className="min-h-screen bg-black text-white font-['Manrope',sans-serif]">
+    <main className="min-h-screen bg-none text-black font-['Manrope',sans-serif]">
       {/* HEADER */}
       <section className="pt-32 pb-16 px-6 md:px-12 lg:px-20">
         <div className="max-w-[1600px] mx-auto">
@@ -132,7 +132,7 @@ const Operations = () => {
               Production Capabilities
             </p>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-[-0.055em] leading-[0.9] text-white">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-[-0.055em] leading-[0.9] text-black">
               Our <span className="font-semibold tracking-[-0.065em]">Operations.</span>
             </h1>
 
@@ -189,7 +189,7 @@ const Operations = () => {
                         </span>
                         <ArrowUpRight size={22} className="text-neutral-500" />
                       </div>
-                      <h2 className="text-3xl md:text-5xl font-light tracking-[-0.04em] text-white">
+                      <h2 className="text-3xl md:text-5xl font-light tracking-[-0.04em] text-black">
                         {activeOperation.title}
                       </h2>
                       <p className="mt-4 text-sm md:text-base leading-[1.8] text-neutral-400 max-w-3xl">
@@ -223,7 +223,7 @@ const Operations = () => {
 
                           {/* OVERLAID BADGE AT BOTTOM OF IMAGE */}
                           <div className="absolute bottom-6 left-6 right-6">
-                            <span className="text-[11px] font-medium tracking-wide text-white/90 bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-white/10 inline-block">
+                            <span className="text-[11px] font-medium tracking-wide text-black/90 bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-black/10 inline-block">
                               {activeOperation.title} Operational Unit
                             </span>
                           </div>
