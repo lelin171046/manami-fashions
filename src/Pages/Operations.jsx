@@ -1,274 +1,522 @@
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ArrowUpRight, CheckCircle2, Layers, Cpu, Gauge, Factory, Activity } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Factory,
+  Layers,
+  Scissors,
+  Shirt,
+  Truck,
+  Wrench,
+} from "lucide-react";
 
-import api from "../api/axios.js";
-
-// Hardcoded fallback matching exact data from your images
-const HARDCODED_SECTIONS = {
-  "Sewing": {
+const HARDCODED_SECTIONS = [
+  {
+    title: "Sample Development",
+    image: "https://thygesenapparel.com/wp-content/uploads/2025/05/sample-development.jpg",
+    imageAlt: "Garment sample development and sewing production workspace",
     stats: [
-      { label: "Number of Sewing Lines", value: "20" },
-      { label: "Number of Sewing Floor", value: "02" },
-      { label: "Sewing Machines Capacity", value: "700" },
-      { label: "Sewing Capacity/Day", value: "40,000 pcs / 7050 Hours" },
-      { label: "Sewing Efficiency", value: "65%" },
+      {
+        label: "Number of Sewing Lines",
+        value: "5",
+      },
+      {
+        label: "Sewing Machines Capacity",
+        value: "70",
+      },
+      {
+        label: "Sewing Capacity/Day",
+        value: "200/Shift",
+      },
+      {
+        label: "Sewing Efficiency",
+        value: "65%",
+      },
+      {
+        label: "Special Machines — Bartack, Buttonhole, etc.",
+        value: "120",
+      },
     ],
-
+    captions: [
+      "Sewing Floor 1",
+      "Sewing Floor 2",
+      "Special Machines",
+      "Quality Check Points",
+    ],
+    icon: Shirt,
   },
-  "Cutting / CAD": {
+  {
+    title: "CAD & Pattern Making",
+    image: "https://i.pinimg.com/736x/7f/98/01/7f9801dbaaa2892ca87f0f0cb1f966cb.jpg",
+    imageAlt: "CAD workstation and pattern-making table for garment production",
     stats: [
-      { label: "Number of Cutting Tables", value: "05" },
-      { label: "Capacity/Day (Knit+Woven)", value: "45,000 pcs" },
-      { label: "CAD Marker Efficiency", value: "85%" },
-      { label: "Fabric Relaxation Capacity", value: "10 tons" },
-      { label: "Cut Panels Check", value: "100%" },
-      { label: "Printed/Embroidery Panel Check", value: "100%" },
-      { label: "Replace Cut Point", value: "5" },
+      {
+        label: "CAD Workstations",
+        value: "04",
+      },
+      {
+        label: "Pattern Making Tables",
+        value: "06",
+      },
+      {
+        label: "Auto Pattern Making Machines",
+        value: "02",
+      },
+      {
+        label: "Plotter Machines",
+        value: "02",
+      },
+      {
+        label: "Fabric Relaxation Area",
+        value: "10 tons",
+      },
     ],
-    captions: ["Cutting Room Floor", "CAD Marker Planning", "Auto Plotter", "Panel Verification"]
-  }
-};
+    captions: [
+      "CAD Workstations",
+      "Pattern Making Tables",
+      "Auto Pattern Making Machines",
+      "Plotter Machines",
+    ],
+    icon: Wrench,
+  },
+  {
+    title: "Cutting",
+    image: "https://t4.ftcdn.net/jpg/02/35/49/43/360_F_235494394_H4rDjsm9mLFmKWQDMTuZ7QnSZQOVaE1i.jpg",
+    imageAlt: "Garment cutting room with fabric cutting tables",
+    stats: [
+      {
+        label: "Number of Cutting Tables",
+        value: "05",
+      },
+      {
+        label: "Capacity/Day — Knit + Woven",
+        value: "45,000 pcs",
+      },
+      {
+        label: "CAD Marker Efficiency",
+        value: "85%",
+      },
+      {
+        label: "Fabric Relaxation Capacity",
+        value: "10 tons",
+      },
+      {
+        label: "Cut Panels Check",
+        value: "100%",
+      },
+      {
+        label: "Printed/Embroidery Panel Check",
+        value: "100%",
+      },
+      {
+        label: "Replace Cut Point",
+        value: "5",
+      },
+    ],
+    captions: [
+      "Cutting Room Floor",
+      "CAD Marker Planning",
+      "Auto Plotter",
+      "Panel Verification",
+    ],
+    icon: Scissors,
+  },
+  {
+    title: "Sewing & Assembly",
+    image: "https://thumbs.dreamstime.com/b/textile-workers-sewing-garments-production-line-operating-industrial-machines-manufacturing-clothing-busy-garment-factory-430137317.jpg",
+    imageAlt: "Garment sewing and assembly production line",
+    stats: [
+      {
+        label: "Number of Sewing Lines",
+        value: "5",
+      },
+      {
+        label: "Sewing Machines Capacity",
+        value: "70",
+      },
+      {
+        label: "Sewing Capacity/Day",
+        value: "200/Shift",
+      },
+      {
+        label: "Sewing Efficiency",
+        value: "65%",
+      },
+      {
+        label: "Special Machines — Bartack, Buttonhole, etc.",
+        value: "120",
+      },
+    ],
+    captions: [
+      "Sewing Floor 1",
+      "Sewing Floor 3",
+      "Special Machines",
+      "Quality Check Points",
+    ],
+    icon: Shirt,
+  },
+  {
+    title: "Finishing & Packing",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJQ1DJX7oxLTLTZo5U33vlzjxxdI9OCuImw7Qe0JvFP2J5p9wJfET23mE&s=10",
+    imageAlt: "Garment finishing and packing department",
+    stats: [
+      {
+        label: "Finishing Lines",
+        value: "08",
+      },
+      {
+        label: "Daily Finishing Capacity",
+        value: "35,000 pcs",
+      },
+      {
+        label: "Needle Detection Machines",
+        value: "04",
+      },
+      {
+        label: "Auto Poly Bagging Machines",
+        value: "06",
+      },
+      {
+        label: "Carton Packing Stations",
+        value: "12",
+      },
+      {
+        label: "Final Inspection Pass Rate",
+        value: "98.5%",
+      },
+    ],
+    captions: [
+      "Finishing Floor",
+      "Needle Detection",
+      "Auto Bagging",
+      "Carton Packing",
+    ],
+    icon: Truck,
+  },
+  {
+    title: "Quality Assurance",
+    image: "https://i0.wp.com/textilelearner.net/wp-content/uploads/2013/05/garment-inspection-1.jpg?resize=600%2C400&ssl=1",
+    imageAlt: "Garment quality inspection and assurance process",
+    stats: [
+      {
+        label: "QC Inspectors",
+        value: "45",
+      },
+      {
+        label: "Inline Inspection Points",
+        value: "12",
+      },
+      {
+        label: "Final Audit Standard",
+        value: "AQL 2.5",
+      },
+      {
+        label: "Fabric Testing Lab",
+        value: "In-house",
+      },
+      {
+        label: "Approved 3rd Party Labs",
+        value: "SGS, Intertek, Bureau Veritas",
+      },
+      {
+        label: "Customer Complaint Rate",
+        value: "< 0.5%",
+      },
+    ],
+    captions: [
+      "Fabric Inspection",
+      "Inline QC",
+      "Final Audit",
+      "Testing Lab",
+    ],
+    icon: CheckCircle2,
+  },
+  {
+    title: "Store & Logistics",
+    image: "https://thygesenapparel.com/wp-content/uploads/2025/05/qp9x9v2j.png",
+    imageAlt: "Garment warehouse and logistics storage area",
+    stats: [
+      {
+        label: "Warehouse Capacity",
+        value: "10,000 sq ft",
+      },
+      {
+        label: "Inventory Management System",
+        value: "ERP Integrated",
+      },
+      {
+        label: "Daily Dispatch Capacity",
+        value: "5,000 pcs",
+      },
+      {
+        label: "Global Shipping Partners",
+        value: "DHL, FedEx, UPS",
+      },
+      {
+        label: "Order Fulfillment Accuracy",
+        value: "99.8%",
+      },
+    ],
+    captions: [
+      "Warehouse Overview",
+      "Inventory Management",
+      "Dispatch Area",
+      "Shipping Partners",
+    ],
+    icon: Layers,
+  },
+];
 
-/* Custom Embedded Sidebar Component */
-const LocalLineSidebar = ({ items, activeIndex, onItemClick }) => {
+const LocalLineSidebar = ({
+  items,
+  activeIndex,
+  onItemClick,
+  operations,
+}) => {
   return (
-    <div className="relative pl-4 border-l border-neutral-800 space-y-4">
+    <nav
+      className="relative space-y-1.5 border-l border-black/15 pl-3"
+      aria-label="Operations sections"
+    >
       {items.map((item, index) => {
         const isActive = activeIndex === index;
+        const operation = operations[index];
+        const Icon = operation?.icon || Factory;
+
         return (
           <button
             key={item}
+            type="button"
             onClick={() => onItemClick(index)}
-            className="group flex items-center gap-3 w-full text-left transition-all duration-300"
+            aria-current={isActive ? "page" : undefined}
+            className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-200 ${
+              isActive
+                ? "bg-neutral-900 text-white shadow-sm"
+                : "text-neutral-600 hover:bg-neutral-100 hover:text-black"
+            }`}
           >
             <span
-              className={`text-[11px] font-mono transition-colors ${
-                isActive ? "text-black font-semibold" : "text-neutral-500 group-hover:text-neutral-300"
+              className={`font-mono text-[11px] transition-colors ${
+                isActive
+                  ? "font-semibold text-neutral-300"
+                  : "text-neutral-400 group-hover:text-black"
               }`}
             >
               {String(index + 1).padStart(2, "0")}
             </span>
+
+            <Icon
+              size={16}
+              strokeWidth={1.8}
+              className={`shrink-0 transition-colors ${
+                isActive
+                  ? "text-white"
+                  : "text-neutral-400 group-hover:text-black"
+              }`}
+            />
+
             <span
               className={`text-sm tracking-wide transition-all ${
                 isActive
-                  ? "text-black font-medium translate-x-1"
-                  : "text-neutral-400 group-hover:text-neutral-200"
+                  ? "font-medium text-white"
+                  : "text-neutral-600 group-hover:text-black"
               }`}
             >
               {item}
             </span>
-            {isActive && (
-              <motion.div
-                layoutId="activeIndicator"
-                className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 };
 
 const Operations = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { data: ops, isLoading } = useQuery({
-    queryKey: ["public-operations"],
-    queryFn: async () => {
-      const { data } = await api.get("/operations/public");
-      return data.data;
-    },
-  });
-
-  const operations = useMemo(() => {
-    if (!ops || ops.length === 0) {
-      // Return hardcoded data array if database is empty
-      return Object.entries(HARDCODED_SECTIONS).map(([title, data], i) => ({
-        _id: `hardcoded-${i}`,
-        title,
-        step: i + 1,
-        description:
-          title === "Sewing"
-            ? "We are consistently striving to enhance and reinvent our operations. Therefore, to entail perfection in every step of growth, we consider technological & engineering advancement to be the essence in providing optimal solutions."
-            : "The integration of Auto CAD, plotter & auto pattern making & fabric relaxation technologies in our process of apparel manufacturing has brought innovation throughout.",
-        stats: data.stats,
-        captions: data.captions,
-        image: ""
-      }));
-    }
-
-    return ops.map((op, i) => {
-      const title = op.title || `Section ${i + 1}`;
-      const fallback = HARDCODED_SECTIONS[title] || HARDCODED_SECTIONS["Sewing"];
-
-      return {
-        ...op,
-        image: op.image?.url || "",
-        step: op.step || i + 1,
-        stats: op.stats || op.heroStats || fallback.stats,
-        captions: op.captions || fallback.captions
-      };
-    });
-  }, [ops]);
+  const operations = HARDCODED_SECTIONS.map((section, index) => ({
+    ...section,
+    step: index + 1,
+    _id: `hardcoded-${index}`,
+  }));
 
   const activeOperation = operations[activeIndex];
-  const sidebarItems = operations.map((op) => op.title);
+
+  const sidebarItems = operations.map((operation) => operation.title);
+
+  if (!activeOperation) {
+    return null;
+  }
 
   return (
-    <main className="min-h-screen bg-none text-black font-['Manrope',sans-serif]">
-      {/* HEADER */}
-      <section className="pt-32 pb-16 px-6 md:px-12 lg:px-20">
-        <div className="max-w-[1600px] mx-auto">
+    <main className="min-h-screen bg-white font-['Manrope',sans-serif] text-black">
+      {/* PAGE HEADER */}
+      <section className="px-6 pt-16 pb-8 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-[1600px]">
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-3xl"
           >
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-red-500 mb-5">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-red-500">
               Production Capabilities
             </p>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-[-0.055em] leading-[0.9] text-black">
-              Our <span className="font-semibold tracking-[-0.065em]">Operations.</span>
+            <h1 className="text-4xl font-light tracking-tight text-black md:text-5xl lg:text-6xl">
+              Our{" "}
+              <span className="font-semibold tracking-tight">
+                Operations.
+              </span>
             </h1>
-
-            <p className="mt-7 max-w-xl text-sm md:text-[15px] leading-[1.8] tracking-[-0.01em] text-neutral-400">
-              Departmental breakdown, machinery capacity, line efficiencies, and technology integration.
-            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-40">
-          <Loader2 size={24} className="text-neutral-500 animate-spin" />
-        </div>
-      ) : operations.length === 0 ? (
-        <div className="text-center py-40">
-          <p className="text-neutral-500 text-sm uppercase tracking-[0.2em]">No operations found</p>
-        </div>
-      ) : (
-        <section className="px-6 md:px-12 lg:px-20 pb-32">
-          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-12 lg:gap-16 items-start">
-            {/* SIDEBAR */}
-            <aside className="lg:sticky lg:top-28">
-              <div className="mb-5">
-                <span className="text-[9px] uppercase tracking-[0.25em] font-semibold text-neutral-500">
-                  Sections
-                </span>
-              </div>
-
-              <LocalLineSidebar
-                items={sidebarItems}
-                activeIndex={activeIndex}
-                onItemClick={(index) => setActiveIndex(index)}
-              />
-            </aside>
-
-            {/* CONTENT DISPLAY */}
-            <div className="min-w-0">
-              <AnimatePresence mode="wait">
-                {activeOperation && (
-                  <motion.article
-                    key={activeOperation._id || activeIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.45, ease: "easeOut" }}
-                  >
-                    {/* SECTION TITLE & DESCRIPTION */}
-                    <div className="mb-8">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs uppercase tracking-[0.2em] text-red-500 font-semibold">
-                          Section {String(activeOperation.step).padStart(2, "0")}
-                        </span>
-                        <ArrowUpRight size={22} className="text-neutral-500" />
-                      </div>
-                      <h2 className="text-3xl md:text-5xl font-light tracking-[-0.04em] text-black">
-                        {activeOperation.title}
-                      </h2>
-                      <p className="mt-4 text-sm md:text-base leading-[1.8] text-neutral-400 max-w-3xl">
-                        {activeOperation.description}
-                      </p>
-                    </div>
-
-                    {/* MAIN IMAGE & SPECIFICATION GRID */}
-                    <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
-                      
-                      {/* LEFT: IMAGE DISPLAY CARD */}
-                      <div className="space-y-3">
-                        <div className="relative w-full h-[380px] md:h-[480px] overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800 shadow-xl">
-                          {activeOperation.image ? (
-                            <img
-                              src={activeOperation.image}
-                              alt={activeOperation.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center text-neutral-600 bg-neutral-900/80 p-6 text-center">
-                              <Factory size={48} className="mb-3 text-neutral-700" />
-                              <p className="text-xs uppercase tracking-widest text-neutral-500">
-                                {activeOperation.title} Floor Photo
-                              </p>
-                            </div>
-                          )}
-
-                          {/* GRADIENT OVERLAY */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                          {/* OVERLAID BADGE AT BOTTOM OF IMAGE */}
-                          <div className="absolute bottom-6 left-6 right-6">
-                            <span className="text-[11px] font-medium tracking-wide text-black/90 bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-black/10 inline-block">
-                              {activeOperation.title} Operational Unit
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* IMAGE CAPTION / FOOTER LABELS */}
-                        {activeOperation.captions && (
-                          <p className="text-xs text-neutral-500 font-mono pl-1">
-                            {activeOperation.captions.join(" — ")}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* RIGHT: DYNAMIC SECTION STATS CARDS */}
-                      <div className="space-y-3">
-                        <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-500 mb-2 pl-1">
-                          Key Operational Metrics
-                        </p>
-
-                        {activeOperation.stats?.map((stat, idx) => (
-                          <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, x: 15 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.05 }}
-                            className="bg-neutral-900/80 border border-neutral-800/90 rounded-xl p-4 flex items-center justify-between hover:border-red-500/40 transition-colors"
-                          >
-                            <span className="text-xs md:text-sm text-neutral-300 font-medium">
-                              {stat.label}
-                            </span>
-                            <span className="text-sm md:text-base font-semibold text-red-400 font-mono bg-red-950/30 px-3 py-1 rounded-md border border-red-900/30">
-                              {stat.value}
-                            </span>
-                          </motion.div>
-                        ))}
-                      </div>
-
-                    </div>
-                  </motion.article>
-                )}
-              </AnimatePresence>
+      {/* MAIN CONTENT AREA */}
+      <section className="px-6 pb-28 md:px-12 lg:px-20">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-start gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+          {/* SIDEBAR NAVIGATION */}
+          <aside className="lg:sticky lg:top-28 z-10">
+            <div className="mb-4">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
+                Sections
+              </span>
             </div>
+
+            <LocalLineSidebar
+              items={sidebarItems}
+              activeIndex={activeIndex}
+              onItemClick={setActiveIndex}
+              operations={operations}
+            />
+          </aside>
+
+          {/* ACTIVE CONTENT CONTAINER */}
+          <div className="min-w-0">
+            <AnimatePresence mode="wait">
+              <motion.article
+                key={activeOperation._id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+              >
+                {/* SECTION HEADER */}
+                <div className="mb-6 border-b border-neutral-100 pb-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-red-500">
+                      Section{" "}
+                      {String(activeOperation.step).padStart(2, "0")}
+                    </span>
+
+                    <ArrowUpRight
+                      size={20}
+                      strokeWidth={1.5}
+                      className="text-neutral-400"
+                    />
+                  </div>
+
+                  <h2 className="text-2xl font-light tracking-tight text-black md:text-4xl">
+                    {activeOperation.title}
+                  </h2>
+                </div>
+
+                {/* MEDIA & METRICS GRID */}
+                <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
+                  {/* LEFT: IMAGE & CAPTION */}
+                  <div className="space-y-3">
+                    <div className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-black/10 bg-neutral-900 shadow-lg md:h-[420px]">
+                      <AnimatePresence mode="wait">
+                        {activeOperation.image ? (
+                          <motion.img
+                            key={activeOperation.image}
+                            src={activeOperation.image}
+                            alt={
+                              activeOperation.imageAlt || activeOperation.title
+                            }
+                            initial={{ opacity: 0, scale: 1.05 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="absolute inset-0 h-full w-full object-cover"
+                            onError={(event) => {
+                              event.currentTarget.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <motion.div
+                            key={`fallback-${activeOperation.title}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex h-full w-full flex-col items-center justify-center bg-neutral-900 p-6 text-center"
+                          >
+                            <activeOperation.icon
+                              size={44}
+                              strokeWidth={1.2}
+                              className="mb-3 text-neutral-600"
+                            />
+                            <p className="text-xs uppercase tracking-widest text-neutral-400">
+                              {activeOperation.title} Floor Photo
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* IMAGE OVERLAY */}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                      {/* IMAGE BADGE */}
+                      <div className="absolute bottom-5 left-5 right-5">
+                        <span className="inline-block rounded-lg border border-white/20 bg-black/60 px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-white backdrop-blur-md">
+                          {activeOperation.title} Operational Unit
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* CAPTION SUMMARY */}
+                    {activeOperation.captions?.length > 0 && (
+                      <p className="pl-1 font-mono text-xs text-neutral-500">
+                        {activeOperation.captions.join(" — ")}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* RIGHT: METRICS LIST */}
+                  <div className="space-y-2.5">
+                    <p className="mb-3 pl-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+                      Key Operational Metrics
+                    </p>
+
+                    {activeOperation.stats?.map((stat, index) => (
+                      <motion.div
+                        key={`${stat.label}-${index}`}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: index * 0.04,
+                          duration: 0.3,
+                        }}
+                        className="flex items-center justify-between gap-4 rounded-xl border border-black/10 bg-neutral-950 p-3.5 transition-colors hover:border-red-500/60"
+                      >
+                        <span className="text-xs font-medium text-neutral-300 md:text-sm">
+                          {stat.label}
+                        </span>
+
+                        <span className="shrink-0 rounded-md border border-red-900/40 bg-red-950/30 px-2.5 py-1 font-mono text-xs font-semibold text-red-400 md:text-sm">
+                          {stat.value}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.article>
+            </AnimatePresence>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </main>
   );
 };

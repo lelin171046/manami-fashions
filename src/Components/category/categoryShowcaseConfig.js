@@ -17,7 +17,7 @@ export const CATEGORY_SHOWCASE = [
     subtitle: "Modern menswear",
     href: "/products/men",
     mediaType: "image",
-    src: "https://m.media-amazon.com/images/I/615dPMYdq6L._AC_UY1000_.jpg",
+    src: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1791317629/pexels-glassesshop-gs-1317359316-30587667_odbrhh.jpg",
   },
   {
     key: "women",
@@ -25,7 +25,7 @@ export const CATEGORY_SHOWCASE = [
     subtitle: "Contemporary womenswear",
     href: "/products/women",
     mediaType: "image",
-    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCV3O_Zf2a5Sjk-NKq5sChZu6QBTNSOaJ-eaYsrIaXPaJSSHS2oWe6-IUl&s=10",
+    src: "https://res.cloudinary.com/dcdmktxtz/image/upload/v1791317185/portrait-brutal-sportive-woman-hood-sportswear-white_pv5sph.jpg",
   },
   {
     key: "kids",

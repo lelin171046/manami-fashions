@@ -29,6 +29,13 @@ const productService = {
     return data;
   },
 
+  async getAllFeaturedProducts(limit = 10) {
+    const params = new URLSearchParams();
+    params.append("limit", limit);
+    const { data } = await api.get(`/products/featured?${params.toString()}`);
+    return data.data;
+  },
+
   async getProductBySlug(slug) {
     const { data } = await api.get(`/products/slug/${slug}`);
     return data.data;

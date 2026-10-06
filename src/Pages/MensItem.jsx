@@ -18,6 +18,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,14 @@ const MensItem = ({
 
   const [showSearch, setShowSearch] =
     useState(false);
+    
+  const navigate = useNavigate();
+  
+  const handleProductClick = (product) => {
+    if (product?.slug) {
+      navigate(`/products/${product.slug}`);
+    }
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -838,7 +847,7 @@ const MensItem = ({
                       <ProductCard
                         product={product}
                         onQuickView={
-                          setSelectedProduct
+                          handleProductClick
                         }
                         index={index}
                       />
@@ -882,7 +891,7 @@ const MensItem = ({
                       <ProductListItem
                         product={product}
                         onQuickView={
-                          setSelectedProduct
+                          handleProductClick
                         }
                         index={index}
                       />

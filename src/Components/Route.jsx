@@ -9,6 +9,7 @@ import ProtectedRoute from "../Admin/components/ProtectedRoute.jsx";
 const Home = lazy(() => import("../Pages/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs"));
 const Products = lazy(() => import("../Pages/Products"));
+const ProductDetails = lazy(() => import("../Components/ProductDetails.jsx"));
 const Operations = lazy(() => import("../Pages/Operations"));
 const Certifications = lazy(() => import("../Pages/Certifications"));
 const Gallery = lazy(() => import("./Gallery"));
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <SuspenseWrapper><AboutUs /></SuspenseWrapper>,
+      },
+      {
+        path: "/products/:slug",
+        element: <SuspenseWrapper><ProductDetails /></SuspenseWrapper>,
       },
       {
         path: "/products",
